@@ -1,0 +1,8 @@
+otp send {{phone}}
+
+<form action="{{users.get_absolute_url}}" method='POST'>
+    {% csrf_token %}
+    {% comment %} <input type="submit" name="Delete"> {% endcomment %}
+    <button class="btn btn-danger btn-block mb-4" type="submit">send</button> 
+    {% comment %} <button class="btn btn-success btn-block "><a style="text-decoration:None; color:black" href="{% url 'adminpanel' %}">Cancel</a></button> {% endcomment %}
+</form>

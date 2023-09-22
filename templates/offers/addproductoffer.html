@@ -1,0 +1,104 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block customhead %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock customhead %}
+
+{% block dynamic %}
+<form action="" method = "post">
+    {% csrf_token %}
+    {{form|crispy}}
+    <button type="submit" class='btn btn-success'>Sumbit</button>
+</form>
+{% endblock dynamic %}
+
+{% block extrascript %}
+<script>
+    function change_product(){
+        $("#id_valid_from").val('');
+        $("#id_valid_till").val('');
+        if($("#id_game").val() == ""){
+            $("#id_valid_from").prop('disabled',true);
+        }
+        else{
+            $("#id_valid_from").prop('disabled',false);
+        }
+        var game_id = $('#id_game').val();
+        console.log('hellooooo');
+        if($("#id_game").val() != ""){
+        $.ajax({
+            
+            data : {'game_id':game_id},
+            url:"/admin_panel/offers/addproductoffer/change_game_option/",
+            success: function(response){
+                console.log(response.start_date);
+                $("#id_valid_from").flatpickr({
+                    dateFormat: "Y-m-d H:i",
+                    minDate: response.start_date,
+                    enableTime: true,
+                    disable: response.disable_list,
+                    }
+                    );
+            },
+            error: function(response){
+
+            },
+        });
+    }
+    }
+
+    $("#id_valid_from").flatpickr({
+        dateFormat: "Y-m-d H:i",
+        enableTime: true,
+        minDate: '{{today}}',
+        });
+    $("#id_valid_till").flatpickr({
+        dateFormat: "Y-m-d H:i",
+        enableTime: true,
+        });
+    $("#id_valid_till").prop('disabled',true)
+
+    function change_date_game(){
+        var date = $('#id_valid_from').val();
+        var game_id = $('#id_game').val();
+        console.log('hellooooo');
+        $.ajax({
+            
+            data : {'date':date,'game_id':game_id,},
+            url:"/admin_panel/offers/addproductoffer/change_valid_till/",
+            success: function(response){
+                $("#id_valid_till").prop('disabled',false);
+                $("#id_valid_till").flatpickr({
+                    dateFormat: "Y-m-d H:i",
+                    minDate: response.start_date,
+                    maxDate: response.end_date,
+                    enableTime: true,
+                    
+            
+                    }
+                    );
+            },
+            error: function(response){
+
+            },
+        });
+        
+    }
+
+    function change_disc_percent(){
+        var disc_percent = $("#id_discount_percentage").val();
+        if(disc_percent > 60){
+            $("#id_discount_percentage").val('60');
+            toastr.error('Maximum value is 60')
+        }
+        if(disc_percent < 5){
+            $("#id_discount_percentage").val('');
+            toastr.error('Minimum value is 5')
+        }
+    }
+
+
+</script>
+{% endblock extrascript %}

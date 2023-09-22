@@ -1,0 +1,13 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+
+
+{% block dynamic %}
+<h2>Are you sure you want to unblock {{block_user.username}} ??</h2>
+
+<form action="" method='POST'>
+    {% csrf_token %}
+    {% comment %} <input type="submit" name="Delete"> {% endcomment %}
+    <button class="btn btn-danger btn-block mb-4" type="submit">Unbqlock {{unblock_user.username}}</button> 
+    <button class="btn btn-success btn-block "><a style="text-decoration:None; color:black" href="{% url 'customer_list' %}">Cancel</a></button>
+</form>
+{% endblock dynamic %}a

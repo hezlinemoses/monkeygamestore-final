@@ -1,0 +1,95 @@
+
+
+
+
+{% extends 'adminpanel/admin_dashboard.html' %}
+{%load crispy_forms_tags %} 
+{% load static %}
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock dynamic_css %}
+
+
+{% block dynamic %}
+{% comment %} <form action="" method="post">
+    {% csrf_token %}
+   
+     {% if messages %}
+    {% for message in messages %}
+        <h3 class="loginerror">{{ message }}</h3>
+    {% endfor %}
+    {% endif %} 
+    
+
+        <!-- Email input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example1"><h3>Username</h3></label>
+          <input type="text" name="email" id="form2Example1" class="form-control" />
+        </div>
+      
+        <!-- Password input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example2"><h3>Password</h3></label>
+          <input type="password" name="password" id="form2Example2" class="form-control" />
+        </div>
+      
+       
+      
+        <!-- Submit button -->
+        <input type="submit" class="btn btn-success btn-block mb-4" value="Login">
+        
+</form> {% endcomment %}
+
+
+
+<main class="container-fluid" style="width:100%;">
+  <div class="col-12 col-sm-7 col-md-6 col-lg-4">
+    <form action="" method="post">
+      {% csrf_token %}
+      
+      <div class="message">
+        {% if messages %}
+        {% for message in messages %}
+           <h3 class="message">{{ message }}</h3>
+        {% endfor %}
+        {% endif %} 
+     </div>
+
+     {% comment %} {% for field in form %}
+     <div class="form-floating">
+      {{field}}
+      {% for error in field.errors %}
+        {{ error }}
+      {% endfor %}
+      {% for help_text in field.help_text %}
+        {{ help_text }}
+      {% endfor %}
+    </div>
+     {% endfor %} {% endcomment %}
+  
+
+   
+     
+     
+      {% comment %} <img class="mb-4 brand-img" src={% static 'images/base/brand-img.png' %} alt="" width="72" height="72"> {% endcomment %}
+      <h1 class="h3 mb-3 fw-normal"><u>Add Sub-category</u></h1>
+      
+     
+      
+        {{form|crispy}}
+        {% comment %} {% crispy form %} {% endcomment %}
+        <button class="w-30 btn btn-lg btn-primary mb-3 signbtn" type="submit">Add New Sub-category</button>
+    </form>
+  </div>
+
+  </main>
+  
+  
+  
+
+
+{% endblock dynamic %}
+
+
+
+
+
+

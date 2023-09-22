@@ -1,0 +1,45 @@
+
+
+
+
+{% extends 'adminpanel/admin_dashboard.html' %}
+{%load crispy_forms_tags %} 
+{% load static %}
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock dynamic_css %}
+
+
+{% block dynamic %}
+
+<main class="container-fluid" style="width:100%;">
+  <div class="col-12 col-sm-7 col-md-6 col-lg-4">
+    <form action="" method="post">
+      {% csrf_token %}
+      
+  
+
+     
+      <h1 class="h3 mb-3 fw-normal"><u>Add Category</u></h1>
+      
+      
+
+     
+      
+        {{form|crispy}}
+        
+        <button class="w-10 btn btn-lg btn-primary mb-3 signbtn fs-6" style="margin-left:auto;" type="submit">Add New Category</button>
+    </form>
+  </div>
+
+  </main>
+  
+  
+  
+
+
+{% endblock dynamic %}
+
+
+
+
+
+

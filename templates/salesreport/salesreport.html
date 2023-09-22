@@ -1,0 +1,122 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_salesreport.css' %}"> {% endblock dynamic_css %}
+{% block dynamic %}
+
+<div class='orders-contain'>
+    <table id="salesreport" class="display nowrap bg-dark" style="width:100%">
+        <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>User</th>
+                <th>Year</th>
+                <th>Month</th>
+                <th>No.of Items</th>
+                <th>Gross Total</th>
+                <th>Offer Discount</th>
+                <th>Coupon Discount</th>
+                <th>Net Total</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><a href="{% url 'admin_orderdetail' order.id %}">{{order.id}}</a></td>
+                <td>{{order.user.username}}</td>
+                <td>{{order.created_at|date:"Y"}}</td>
+                <td>{{order.created_at|date:"M"}}</td>
+                <td>{{order.itemcount}}</td>
+                <td>{{order.total_before_discount}}</td>
+                <td>{{order.total_discount_given}}</td>
+                <td>{{order.coupon_discount}}</td>
+                <td>{{order.total}}</td>
+                
+            </tr>
+            {% endfor %}
+        <tbody>
+        <tfoot>
+            <tr>
+                <th>Order Id</th>
+                <th>User</th>
+                <th>Year</th>
+                <th>Month</th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Net Total</th>
+            </tr>
+        </tfoot>
+    
+    </table>
+</div>
+
+{% endblock dynamic %}
+
+{% block extrascript %}
+<script>
+    
+
+    $(document).ready(function () {
+        // Setup - add a text input to each footer cell
+        $('#salesreport tfoot th').each(function () {
+            var title = $(this).text();
+            if(title != ""){
+            $(this).html('<input type="text" id='+title+' placeholder="' + title + '" />');}
+        });
+     
+        // DataTable
+        var table = $('#salesreport').DataTable({
+            scrollY: 400,
+            scrollX: true,
+            order: [[0, 'desc']],
+            search: {
+                regex: false,
+                smart: false
+             },
+            dom: 'Bfrtip',
+            buttons: [
+            { extend: 'excelHtml5', footer: true },
+            { extend: 'pdfHtml5', footer: true }
+        ],
+            initComplete: function () {
+                // Apply the search
+                this.api()
+                    .columns()
+                    .every(function () {
+                        var that = this;
+     
+                        $('input', this.footer()).on('keyup change clear', function () {
+                            if (that.search() !== this.value) {
+                                that.search(this.value).draw();
+                            }
+                        });
+                    });
+            },
+            footerCallback: function (row, data, start, end, display) {
+                var api = this.api();
+     
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
+                };
+     
+                // Total over all pages
+                total = api
+                    .column(8,{search:'applied'})
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                // Update footer
+                $(api.column(8).footer()).html('Revenue: ₹' + total + '');
+            },
+        });
+
+        $('.dt-button').attr('class','btn btn-sm btn-outline-success');
+        
+        
+    });
+</script>
+{% endblock extrascript %}

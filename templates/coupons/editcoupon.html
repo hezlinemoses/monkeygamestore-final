@@ -1,0 +1,192 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block customhead %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock customhead %}
+
+{% block dynamic %}
+<form action="" method = "post">
+    {% csrf_token %}
+    <div class="row" style='width:90%;'>
+        <div class="col-5 basic-details">
+            <h4 class='fw-bold'>Basic Details</h4>
+            {{form.coupon_code|as_crispy_field}}
+            {{form.coupon_type|as_crispy_field}}
+            {{form.order_no|as_crispy_field}}
+            {{form.discount_type|as_crispy_field}}
+            {{form.discount_percent_value|as_crispy_field}}
+            {{form.discount_amount_value|as_crispy_field}}
+            
+
+        </div>
+        <div class="col-5 limitations">
+            <h4 class='fw-bold'>Limitations</h4>
+            {{form.min_purchase_amount|as_crispy_field}}
+            {{form.max_discount_amount|as_crispy_field}}
+            {% if form.valid_from %}
+                {{form.valid_from|as_crispy_field}}
+            {% endif %}
+            {% if form.valid_till %}
+            {{form.valid_till|as_crispy_field}}
+            {% endif %}
+            {{form.max_usage_limit|as_crispy_field}}
+            {{form.max_usage_per_user_limit|as_crispy_field}}
+            <br>
+            <br>
+            {% if edit_coupon.status != 'Expired' %}
+            <button type="submit" class='btn btn-success col-6'>Update</button>
+            {% endif %}
+            
+        </div>
+    </div>
+
+    
+</form>
+{% endblock dynamic %}
+
+{% block extrascript %}
+<script>
+    $('#div_id_order_no').hide();
+    $('#div_id_discount_percent_value').hide();
+    $('#div_id_discount_amount_value').hide();
+    $('#div_id_max_usage_limit').hide();
+    $('#div_id_max_usage_per_user_limit').hide();
+    $('#div_id_max_discount_amount').hide();
+    window.load = change_coupon_type();change_discount_type();
+    function change_coupon_type(){
+        var value = $('#id_coupon_type').val();
+        if(value == 'Specific Order'){
+            $('#div_id_order_no').show('slow');
+            $('#id_order_no').prop('required',true);
+            $('#div_id_max_usage_limit').hide('slow');
+            $('#div_id_max_usage_per_user_limit').hide('slow');
+            $('#iid_max_usage_limit').prop('required',false);
+            $('#id_max_usage_per_user_limit').prop('required',false);
+        }
+        else if(value == 'Normal'){
+            $('#div_id_order_no').hide('slow');
+            $('#id_order_no').val('');
+            $('#id_order_no').prop('required',false);
+            $('#div_id_max_usage_limit').show('slow');
+            $('#div_id_max_usage_per_user_limit').show('slow');
+            $('#id_max_usage_limit').prop('required',true);
+            $('#id_max_usage_per_user_limit').prop('required',true);
+        }
+    }
+
+    function change_discount_type(){
+        var disc_value = $('#id_discount_type').val();
+        if(disc_value == 'Percentage'){
+            $('#div_id_discount_percent_value').show('slow');
+            $('#id_discount_percent_value').prop('required',true);
+            $('#div_id_discount_amount_value').hide();
+            $('#id_discount_amount_value').prop('required',false);
+            $('#div_id_max_discount_amount').show('slow');
+            $('#div_id_max_discount_amount').prop('required',true);
+        }
+        else if(disc_value == 'Amount'){
+            $('#div_id_discount_amount_value').show('slow');
+            $('#id_discount_amount_value').prop('required',true);
+            $('#div_id_discount_percent_value').hide();
+            $('#id_discount_percent_value').prop('required',false);
+            $('#div_id_max_discount_amount').hide('slow');
+            $('#div_id_max_discount_amount').prop('required',false);
+        }
+        else{
+            $('#div_id_discount_amount_value').hide();
+            $('#id_discount_amount_value').prop('required',false);
+            $('#div_id_discount_percent_value').hide();
+            $('#id_discount_percent_value').prop('required',false);
+            $('#div_id_max_discount_amount').hide('slow');
+            $('#div_id_max_discount_amount').prop('required',false);
+        }
+    }
+    
+    function change_enable_duration(){
+        var duration_value = $("input[type='radio'][name='duration_enable']:checked").val();
+        if(duration_value == 'Yes'){
+            $('#div_id_valid_from').show('slow');
+            $('#id_valid_from').prop('required',true);
+            $('#div_id_valid_till').show('slow');
+            $('#id_valid_till').prop('required',true);
+        }
+        else{
+            $('#div_id_valid_from').hide('slow');
+            $('#id_valid_from').prop('required',false);
+            $('#div_id_valid_till').hide('slow');
+            $('#id_valid_till').prop('required',false);
+        }
+    }
+    
+    function discount_percent_validation(){
+        var disc_percent = $('#id_discount_percent_value').val();
+        if(disc_percent < 5){
+            $('#id_discount_percent_value').val('');
+            toastr.error('Minimum value is 5');
+        }
+        if(disc_percent > 60){
+            $('#id_discount_percent_value').val('60');
+            toastr.error('Maximum value is 60');
+        }
+    }
+
+    $("#id_valid_from").flatpickr({
+        dateFormat: "Y-m-d H:i",
+        enableTime: true,
+        minDate: '{{today}}',
+        }
+    );
+    alert('{{valid_till}}');
+
+    $("#id_valid_till").flatpickr({
+        dateFormat: "Y-m-d H:i",
+        enableTime: true,
+        minDate: '{{valid_till}}',
+        }
+    );
+  
+    
+    
+
+    function change_valid_till_coupon(){
+        var date = $('#id_valid_from').val();
+        $('#id_valid_till').prop('required',true);
+        $('#id_valid_till').val('');
+        $.ajax({
+            data:{'date':date},
+            url: '/admin_panel/coupons/addcoupon/change_valid_till/',
+            success: function(response){
+                $("#id_valid_till").flatpickr({
+                    dateFormat: "Y-m-d H:i",
+                    enableTime: true,
+                    minDate: response.start_date,
+                    }
+                );
+            },
+        });
+    }
+
+    function validation(id){
+        var check_value = $(`#${id}`).val();
+        if(check_value < 1 ){
+            $(`#${id}`).val('');
+            toastr.error('Minimum value is 1')
+        }
+    }
+    function check_order(){
+        var order_no = $('#id_order_no').val();
+        $.ajax({
+            data:{'order_no':order_no},
+            url:"/admin_panel/coupons/check_order/",
+            success: function(response){
+                if(response.error_message){
+                    toastr.error(response.error_message);
+                    $('#id_order_no').val('');
+                }
+            },
+        });
+    }
+</script>
+{% endblock extrascript %}

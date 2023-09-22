@@ -1,0 +1,416 @@
+
+
+
+
+{% extends 'adminpanel/admin_dashboard.html' %}
+{%load crispy_forms_tags %} 
+{% block formmedia %}{{ form.media }}{% endblock formmedia %}
+
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropper/2.3.4/cropper.min.css" />
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock dynamic_css %}
+
+
+{% block dynamic %}
+
+
+
+
+    
+  <main class="container-fluid" style="width:100%;">
+    <div class="col-12 col-sm-7 col-md-6 col-lg-4">
+    <form action="" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+      <div class="message">
+        {% if messages %}
+        {% for message in messages %}
+           <h3 class="message">{{ message }}</h3>
+        {% endfor %}
+        {% endif %} 
+     </div>
+
+    
+      <h1 class="h3 mb-3 fw-normal"><u>Add Game</u></h1>
+      
+      
+      
+        {{form|crispy}}
+
+        <label for="">image</label><br>
+                        <div id="crop">
+                            <img id="imgView1" alt="" style="height: 100px; width: 120px" class="clr" />
+
+                            <div class="vald-info" id="info"></div>
+                            <h5 class="error_form text-danger" id="image1_error_message"></h5>
+                            <div style="display: flex">
+                                
+                                <div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+ 
+        {% if formset %}
+
+        <hr>
+        Description : 
+        {{formset.management_form}}
+        <div id='desc-form-list'>
+          {% for form in formset %}
+            <div class='desc-form'>
+            {{form|crispy}}
+            <hr>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div id='empty-form' class='hidden'>{{formset.empty_form|crispy}}
+          
+          
+          <hr>
+          
+        </div>
+        <button type='button' class='hidden' onclick="removelastForm();" id='remove-form'> Remove Form</button>
+      
+        <button id='add-more'  class='btn btn-success' type='button'>Add More</button>
+        <br>
+        
+        
+        {% endif %}
+        <br>
+        {% comment %} -------------------------------------- {% endcomment %}
+        {% if imgformset %}
+
+        <hr>
+        Images : 
+        {{imgformset.management_form}}
+        <div id='img-form-list'>
+          {% for form in imgformset %}
+            <div class='img-form'>
+            {{form|crispy}}
+            <hr>
+            </div>
+          {% endfor %}
+        </div>
+
+        <div id='img-empty-form' class='hidden'>{{imgformset.empty_form|crispy}}
+          
+          
+          <hr>
+          
+        </div>
+        <button type='button' class='hidden' onclick="imgremovelastForm();" id='img-remove-form'> Remove Form</button>
+      
+        <button id='img-add-more'  class='btn btn-success' type='button'>Add More</button>
+        <br>
+        
+        
+        {% endif %}
+
+
+        <button class="w-30 btn btn-lg btn-primary signbtn" type="submit">Update {{game_edit.title}}</button>
+
+
+       
+       
+        
+    </form>
+  </div>
+
+  {% comment %} <---------------------Modal---------------------> {% endcomment %}
+  <div class="modal fade" id="exampleModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog bg-dark modal-lg">
+      <div class="modal-content bg-dark">
+        <div class="modal-header bg-dark">
+          <h5 class="modal-title bg-dark" id="exampleModalLabel">Main Banner Image</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body bg-dark">
+          <div id="image-box1" class="image-container clr" style="height: 100%; width: 100%;">
+          </div>
+          <div>
+              <button type="button" class="betaButton btn btn-success" id="crop-btn1" style="
+                          display: none;
+                          margin: 20px 0px 0px 40px;
+                          position:relative;
+                          top:80%;
+                          left:70%
+                          ">
+                  Crop
+              </button>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+   
+  </script>
+  <script>
+   
+    const addMoreBtn = document.getElementById('add-more')
+    const totalNewForms = document.getElementById('id_form-TOTAL_FORMS')
+    const currentDescForms = document.getElementsByClassName('desc-form')
+    let currentFormCount = currentDescForms.length
+    {% comment %} if (currentFormCount==1){
+      const removeBtn = document.getElementById('remove-form')
+      removeBtn.setAttribute('class','hidden')
+    }  {% endcomment %}
+  
+    console.log(currentFormCount)
+    addMoreBtn.addEventListener('click', add_new_form)
+    
+   
+
+    function add_new_form(event){
+      if (event){
+        event.preventDefault()
+      }
+      console.log(currentFormCount)
+      const removeBtn = document.getElementById('remove-form')
+      removeBtn.setAttribute('class','btn btn-danger')
+     
+      const formCopyTarget = document.getElementById('desc-form-list')
+      
+      const copyEmptyFormEl = document.getElementById('empty-form').cloneNode(true)
+      copyEmptyFormEl.setAttribute('class','desc-form')
+      copyEmptyFormEl.setAttribute('id',`form-${currentFormCount}`)
+      console.log(copyEmptyFormEl)
+      const regex = new RegExp('__prefix__', 'g')
+      copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+      currentFormCount = currentFormCount+1
+      totalNewForms.setAttribute('value',currentFormCount)
+      console.log(currentFormCount)
+      formCopyTarget.append(copyEmptyFormEl)
+
+      if (currentFormCount>1){
+        const removeBtn = document.getElementById('remove-form')
+        removeBtn.setAttribute('class','btn btn-danger')
+      }
+
+    }
+
+    function removelastForm() {
+    
+      console.log("asdffffff")
+      console.log(currentFormCount)
+      const lastForm = document.getElementById(`form-${currentFormCount-1}`)
+      console.log(lastForm)
+      lastForm.setAttribute('class','hidden')
+      lastForm.setAttribute('id','deleted')
+      currentFormCount = currentFormCount-1
+      totalNewForms.setAttribute('value',currentFormCount)
+      console.log(currentFormCount)
+      if (currentFormCount==1){
+        const removeBtn = document.getElementById('remove-form')
+        removeBtn.setAttribute('class','hidden')
+      }
+    }
+
+    console.log(currentFormCount)
+  
+
+
+  </script>
+
+
+  
+  <script>
+   
+      const imgaddMoreBtn = document.getElementById('img-add-more')
+      const imgtotalNewForms = document.getElementById('id_image-TOTAL_FORMS')
+      const currentImgForms = document.getElementsByClassName('img-form')
+      let imgcurrentFormCount = currentImgForms.length
+      {% comment %} if (currentFormCount==1){
+        const removeBtn = document.getElementById('remove-form')
+        removeBtn.setAttribute('class','hidden')
+      }  {% endcomment %}
+    
+      console.log(imgcurrentFormCount)
+      imgaddMoreBtn.addEventListener('click', img_add_new_form)
+      
+     
+  
+      function img_add_new_form(event){
+        if (event){
+          event.preventDefault()
+        }
+        console.log(imgcurrentFormCount)
+        const imgremoveBtn = document.getElementById('img-remove-form')
+        imgremoveBtn.setAttribute('class','btn btn-danger')
+       
+        const imgformCopyTarget = document.getElementById('img-form-list')
+        
+        const imgcopyEmptyFormEl = document.getElementById('img-empty-form').cloneNode(true)
+        imgcopyEmptyFormEl.setAttribute('class','img-form')
+        imgcopyEmptyFormEl.setAttribute('id',`imgform-${imgcurrentFormCount}`)
+        console.log(imgcopyEmptyFormEl)
+        const imgregex = new RegExp('__prefix__', 'g')
+        imgcopyEmptyFormEl.innerHTML = imgcopyEmptyFormEl.innerHTML.replace(imgregex, imgcurrentFormCount)
+        imgcurrentFormCount = imgcurrentFormCount+1
+        imgtotalNewForms.setAttribute('value',imgcurrentFormCount)
+        console.log(imgcurrentFormCount)
+        imgformCopyTarget.append(imgcopyEmptyFormEl)
+  
+        if (imgcurrentFormCount>1){
+          const imgremoveBtn = document.getElementById('img-remove-form')
+          imgremoveBtn.setAttribute('class','btn btn-danger')
+        }
+  
+      }
+  
+      function imgremovelastForm() {
+      
+        console.log("asdffffff")
+        console.log(imgcurrentFormCount)
+        const imglastForm = document.getElementById(`imgform-${imgcurrentFormCount-1}`)
+        console.log(imglastForm)
+        imglastForm.setAttribute('class','hidden')
+        imglastForm.setAttribute('id','deleted')
+        imgcurrentFormCount = imgcurrentFormCount-1
+        imgtotalNewForms.setAttribute('value',imgcurrentFormCount)
+        console.log(imgcurrentFormCount)
+        if (imgcurrentFormCount==1){
+          const imgremoveBtn = document.getElementById('img-remove-form')
+          imgremoveBtn.setAttribute('class','hidden')
+        }
+      }
+  
+      console.log(imgcurrentFormCount)
+    
+  
+  
+    
+  </script>
+
+
+
+        
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/0.8.1/cropper.min.js"></script>
+
+ 
+
+<script>
+  
+
+    
+    
+    function changeImg(clicked_id) {
+     
+       $('#exampleModal').modal('show');
+     
+       console.log(clicked_id);
+       const imagebox1 = document.getElementById("image-box1");
+    const crop_btn1 = document.getElementById("crop-btn1");
+    const input1 = document.getElementById(clicked_id);
+    function viewImage1(event) {
+        var fileInput1 = document.getElementById(clicked_id);
+        var filePath1 = fileInput1.value;
+        var allowedExtensions = /(\.jpg,.rgba)$/i;
+        if (!allowedExtensions.exec(filePath1)) {
+            fileInput1.value = "";
+            swal("There is a problem!", "Please choose image file.");
+            return false;
+        } else {
+            document.getElementById("imgView1").src = URL.createObjectURL(
+                event.target.files[0]
+            );
+        }
+    }
+   
+    
+    // When user uploads the image this event will get triggered
+    
+        // Getting image file object from the input variable
+        const img_data1 = input1.files[0];
+        // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+        // The new object URL represents the specified File object or Blob object.
+        const url1 = URL.createObjectURL(img_data1);
+        // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+        imagebox1.innerHTML = `<img src="${url1}" id="image1" style="width:100%;">`;
+        // Storing that cropping view image in a variable
+        const image1 = document.getElementById("image1");
+
+        // Displaying the image box
+        document.getElementById("image-box1").style.display = "block";
+        // Displaying the Crop buttton
+        document.getElementById("crop-btn1").style.display = "block";
+        // Hiding the Post button
+        document.getElementById("imgView1").style.display = "block";
+      
+       if(clicked_id == 'id_thumbnail'){
+         var cropper1 = new Cropper(image1, {
+           autoCropArea: 1,
+           aspectRatio: 1/1,
+           viewMode: 1,
+           scalable: true,
+           zoomable: true,
+           movable: true,
+           minCropBoxWidth:1130,
+           minCropBoxheight:570,
+           });
+         }
+         else{
+           var cropper1 = new Cropper(image1, {
+             autoCropArea: 1,
+             aspectRatio: 16/9,
+             viewMode: 1,
+             scalable: true,
+             zoomable: true,
+             movable: true,
+             minCropBoxWidth:1130,
+             minCropBoxheight:570,
+             });
+         }
+           
+       
+        
+        // When crop button is clicked this event will get triggered
+        crop_btn1.addEventListener("click", () => {
+            // This method coverts the selected cropped image on the cropper canvas into a blob object
+            cropper1.getCroppedCanvas().toBlob((blob) => {
+                // Gets the original image data
+                let fileInputElement1 = document.getElementById(clicked_id);
+                // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+                let file1 = new File([blob], img_data1.name, {
+                    type: "image/*",
+                    lastModified: new Date().getTime(),
+                           });
+                // Create a new container
+                let container1 = new DataTransfer();
+                // Add the cropped image file to the container
+                container1.items.add(file1);
+                // Replace the original image file with the new cropped image file
+                fileInputElement1.files = container1.files;
+                document.getElementById("imgView1").src = URL.createObjectURL(
+                    fileInputElement1.files[0]
+                         );
+                // Hide the cropper box
+                document.getElementById("image-box1").style.display = "none";
+                // Hide the crop button
+                document.getElementById("crop-btn1").style.display = "none";
+
+
+             }  );
+        });
+     
+
+
+
+   }
+</script>
+
+{% endblock dynamic %}
+
+
+
+
+
+

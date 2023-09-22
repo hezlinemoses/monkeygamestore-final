@@ -1,0 +1,15 @@
+.dynamic{
+    margin-top: 1rem;
+    width: 90%;
+    margin-right: auto;
+    overflow: scroll;
+    
+  }
+  
+  .main{
+    display: flex !important;
+  }
+
+  .fa-trash:hover{
+    cursor: pointer;
+  }

@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock dynamic_css %}
+{% block content %}
+<div class="container mt-5">
+
+  <form action="" method="post" enctype="multipart/form-data">
+    <div class="row">
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="fw-bold">Order summary</span>
+          <span class="badge badge-secondary badge-pill"></span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed dark-light ">
+            <div class='col-4'>
+              <small class="text-muted">Name</small>
+            </div>
+            <div class='col-4 text-center'>
+              <small class="text-muted">Product Keys</small>
+            </div>
+            <div class='col-4 text-center'>
+              <small class="text-muted">Price</small>
+            </div>
+          </li>
+          {% for item in cartitems %}
+          <li class="list-group-item d-flex justify-content-between lh-condensed dark-light ">
+            <div class='col-4'>
+              <h6 class="text-light capital">{{item.game.title}}</h6>
+            </div>
+            <div class='col-4 text-center'> 
+              <span class='text-light ' >{{item.quantity}}</span>
+            </div>
+            <div class='col-4 text-center'> 
+              {% if item.game.discount_status != 'None' %}
+              <div class='d-flex justify-content-center'>
+                <del><span class='text-muted text-center' >₹{{item.item_total}}</span></del>
+                <span class='text-light text-center' >₹{{item.item_offer_discounted_price}}</span>
+              </div>
+              {% else %}
+              <span class='text-light' >₹{{item.item_total}}</span>
+              {% endif %}
+              
+            </div>
+          </li>
+          {% endfor %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Price</span>
+            <strong>₹{{cart.total_no_discount}}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Offer discount</span>
+            <strong>₹{{cart.total_discount_given}}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Coupon discount {% if cart.coupon %}({{cart.coupon.coupon.coupon_code}}){% endif %} </span>
+            <strong>₹{{cart.coupon_discount}}</strong>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total (INR)</span>
+            <strong>₹{{cart.final_total}}</strong>
+          </li>
+        
+          {% comment %} <li class="list-group-item d-flex justify-content-between bg-light">
+            <div class="text-success">
+              <h6 class="my-0">Promo code</h6>
+              <small>EXAMPLECODE</small>
+            </div>
+            <span class="text-success">-$5</span>
+          </li> {% endcomment %}
+          
+        </ul>
+        <br>
+        <hr>
+        
+          {% csrf_token %}
+          
+        {% comment %} <h3 class='fw-bold'>Payment Method</h3>
+        {% crispy paymentform %} {% endcomment %}
+        <hr>
+        <button id='show-me' class="btn btn-outline-primary btn-lg btn-block mb-5" type="submit">Payment</button>
+        <hr>
+
+      </div>
+
+
+      <div class="col-md-8 order-md-1 ">
+        
+        <h4 class="mb-3 fw-bold">Billing address</h4>
+        <div class='row'>
+        <div class='col-12'>
+          {{address_method_form|crispy}}
+        </div></div>
+          
+        <div id='new-address-form'>
+           <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.first_name|as_crispy_field}}
+             
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{billform.last_name|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.line_1|as_crispy_field}}
+             
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{billform.line_2|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.locality|as_crispy_field}}
+             
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{billform.city|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.district|as_crispy_field}}
+             
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{billform.state|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.country|as_crispy_field}}
+             
+            </div>
+
+            <div class="col-md-6 mb-3">
+              {{billform.pincode|as_crispy_field}}
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              {{billform.phone|as_crispy_field}}
+             
+            </div>
+          </div>
+
+          <hr>
+          <div class=row>
+            <div class="col-md-6">
+              {{billform.save_address|as_crispy_field}}
+            </div>
+          </div>
+          
+          <hr>
+        </div>
+         
+        <div id='saved_address_form'>
+          {{saved_address_form|crispy}}
+          
+          
+        </div>
+        
+      </div>
+    </div>
+  </form>
+  </div>
+{% endblock content %}
+{% block extrascript %}
+<script>
+  $("#new-address-form").hide();
+  $("#razorpay").hide('slow');
+  
+  $('input[name=address_method]').click(function () {
+    if (this.id == "id_address_method_0") {
+        $("#new-address-form").show('slow');
+        $("#id_first_name").prop('required',true);
+        $("#id_last_name").prop('required',true);
+        $("#id_line_1").prop('required',true);
+        $("#id_locality").prop('required',true);
+        $("#id_city").prop('required',true);
+        $("#id_district").prop('required',true);
+        $("#id_state").prop('required',true);
+        $("#id_country").prop('required',true);
+        $("#id_phone").prop('required',true);
+        $("#id_pin").prop('required',true);
+    } else {
+        $("#new-address-form").hide('slow');
+
+    }
+    if (this.id=='id_address_method_1'){
+        $("#saved_address_form").show('slow');
+        $("#id_first_name").prop('required',false);
+        $("#id_last_name").prop('required',false);
+        $("#id_line_1").prop('required',false);
+        $("#id_line_2").prop('required',false);
+        $("#id_locality").prop('required',false);
+        $("#id_city").prop('required',false);
+        $("#id_district").prop('required',false);
+        $("#id_state").prop('required',false);
+        $("#id_country").prop('required',false);
+        $("#id_phone").prop('required',false);
+        $("#id_pincode").prop('required',false);
+    } else{
+        $("#saved_address_form").hide('slow');
+    }
+  });
+
+  $(document).ready(function(){
+    const { search } = window.location;
+    const couponRemoved = (new URLSearchParams(search)).get('couponremoved');
+    if (couponRemoved === '1') {
+      // The page was just reloaded, display the toast:
+      toastr.error("Coupon removed from cart(expired)")
+    }
+    $.ajax({
+      url:"/user_coupon_check/",
+      success: function(response){
+        if(response.coupon_removed == true){
+          window.location.href = window.location.pathname + '?couponremoved=1';
+        }
+      },
+    });
+  });
+
+</script>
+{% endblock extrascript %}

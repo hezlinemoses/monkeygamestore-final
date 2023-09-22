@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %}<link rel="stylesheet" type="text/css" href="{% static "/styles/login.css" %}"> {% endblock extracss %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+   
+    {% if messages %}
+    {% for message in messages %}
+        <h3 class="loginerror">{{ message }}</h3>
+    {% endfor %}
+    {% endif %}
+        <!-- Email input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example1"><h3>Username</h3></label>
+          <input type="text" name="email" id="form2Example1" class="form-control" />
+        </div>
+      
+        <!-- Password input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example2"><h3>Password</h3></label>
+          <input type="password" name="password" id="form2Example2" class="form-control" />
+        </div>
+      
+       
+      
+        <!-- Submit button -->
+        <input type="submit" class="btn btn-success btn-block mb-4" value="Login">
+        
+</form>
+{% endblock content %}

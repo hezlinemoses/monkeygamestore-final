@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %} <link href="{% static 'styles/clientpanel/cart.css' %}" rel="stylesheet" >{% endblock extracss %}
+
+{% block content %}
+
+{% comment %} {{cart}} {% endcomment %}
+<main>
+    <section class="h-100">
+        <div class="container-fluid h-100  flex-media">
+
+          <div class="row d-flex align-items-center h-100 w-100">
+            {% if cartitems %}
+            <div class="col-12 items-container">
+      
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h3 class="mb-0 fw-bold">Shopping Cart</h3>
+             
+              </div>
+              
+              
+              {% for item in cartitems %}
+              
+              <div class="card rounded-3 mb-4 dark-light cartitem item-{{item.id}}">
+                <div class="card-body p-4 dark-light item-{{item.id}}">
+                  <div class="row d-flex justify-content-between align-items-center">
+                    <div class="col-md-3 col-lg-3 col-xl-2 mb-3">
+                      <img
+                        src="/media/{{item.game.thumbnail}}"
+                        class="img-fluid rounded-3"
+                        style="width:50%"
+                        >
+                    </div>
+                    <div class="col-md-4 col-lg-4 col-xl-4 mb-3 mb-sm-0">
+                      <p class="lead mb-2 capital" style="font-weight:600;">{{item.game.title}}</p>
+                      {% comment %} <p class='d-flex flex-column'><div class='mb-2'><span class="text-muted ">Publisher: </span>Rockstar Games </div>
+                        <div class='platform'><i class="fa-brands fa-windows text-secondary"></i></div></p> {% endcomment %}
+                    </div>
+                    
+                    <div class="col-md-4 col-lg-3 col-xl-2 d-flex mb-4  justify-content-center mb-sm-0">
+                      
+                      <button class="btn btn-link px-2 update-quantity"
+                        onclick="updateQuantity({{item.id}},'remove')"
+                        id = "remove-btn-{{item.id}}"
+                        
+                        >
+                        <i class="fa fa-minus"></i>
+                      </button>
+                     
+      
+                      <input style="width: 3rem;" disabled="" id="form1" name="quantity-{{item.id}}" value="{{item.quantity}}" type="text"
+                        class="form-control form-control-sm text-center" />
+                      
+                      <button class="btn btn-link px-2 update-quantity"
+                        onclick="updateQuantity({{item.id}},'add')"
+                        id = "add-btn-{{item.id}}"
+                        >
+                        <i class="fas fa-plus"></i>
+                      </button>
+                     
+                    </div> 
+                    <div class="col-md-3 col-lg-2 col-xl-2 mb-2 mb-sm-0">
+                      {% if item.game.discount_status != "None" %}
+                      <div class="d-flex">
+                        <del><h5 class="mb-0 text-muted" style="font-weight:600;">₹{{item.game.base_price}}</h5></del>
+                        <h5 style="font-weight:600;">₹{{item.game.discounted_price}}</h5>
+                      </div>
+                      {% else %}
+                      <h5 class="mb-0" style="font-weight:600;">₹{{item.game.base_price}}</h5>
+                      {% endif %}
+                      
+                      
+                    </div>
+                    <div class="col-md-1 col-lg-1 col-xl-1 text-end mb-3 mb-sm-0" style='float:right;'>
+                      <i id="item-{{item.id}}" data-game={{item.game.id}} data-action="remove" onclick="removeItem('item-{{item.id}}')" class="fas fa-trash fa-lg update-cart text-danger item-remove"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+
+              
+              
+      
+            </div>
+            {% else %}
+              <div class='' id='empty-cart'>
+              There are no items in this cart. Continue shopping....
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185.42 99.73"><style>.a{fill:#888888}.b{fill:#7f7f7f}.cls-13,.cls-2,.cls-3,.cls-4,.cls-5{fill: #afafaf}.cls-3{font-size:17.95px}.cls-13,.cls-3,.cls-4,.cls-4{font-size:17.95px}.cls-5{font-size:17.95px}.cls-11,.cls-6,.cls-8,.cls-9{fill:none}.cls-11,.cls-6,.cls-7,.cls-8,.cls-9{stroke: #b2b2b2}.cls-6,.cls-9{stroke-miterlimit:10}.cls-6{stroke-width:0.75px}.cls-7{fill: rgba(0,0,0,0)}.cls-11,.cls-7,.cls-8{stroke-linecap:roundstroke-linejoin:round}.cls-8{stroke-width:3px}.cls-11{stroke-dasharray:1.93 2.9}.cls-12{mix-blend-mode:multiply}.cls-13{font-size:11.98px}</style><g class="cls-1"><path class="cls-2" d="m36.06 76.41l-12.65 0c-1.4 0-3 0-2.86-2 0.13-1.73 1.73-1.42 2.89-1.43q13.06 0 26.12 0c1.18 0 2.74-0.24 2.85 1.49 0.13 2-1.51 1.9-2.88 1.9 -4.53 0.05-8.98 0.05-13.47 0.04z"></path><path class="cls-2" d="m53.91 87.12c-2 0-4.08 0-6.11 0 -1 0-1.91-0.44-1.82-1.68a1.52 1.52 0 0 1 1.7-1.44q6.52-0.05 13 0c1 0 2 0.45 1.83 1.67s-1.1 1.42-2.12 1.42l-6.48 0 0 0.03z"></path><path class="cls-2" d="m33.74 99.33c-2 0-4.06 0-6.09 0 -0.88 0-1.66-0.36-1.76-1.3s0.7-1.46 1.55-1.47q6.29-0.06 12.58 0c0.78 0 1.71 0.22 1.76 1.27 0.05 1.32-1 1.46-2 1.48 -1.98 0.05-4.01 0.02-6.04 0.02z"></path><path class="cls-2" d="m39.2 87.15c-1.19-0.06-2.71 0.08-2.66-1.6s1.56-1.55 2.75-1.55 2.7-0.11 2.65 1.6 -1.56 1.49-2.74 1.55z"></path><path class="cls-2" d="m2.54 73.56c1.36 0.23 3.11-0.23 3 1.59s-1.83 1.22-3 1.24 -2.49 0.32-2.54-1.25c-0.06-1.97 1.76-1.14 2.54-1.58z"></path><path class="cls-2" d="m16.8 96.48c1 0.11 2.35-0.09 2.32 1.47 0 1.18-1.06 1.39-2.05 1.38s-2.32 0-2.34-1.48c-0.01-1.3 1.12-1.26 2.07-1.37z"></path><path class="cls-2" d="m12.92 76.44c-1.23-0.11-2-0.68-2-1.73 0-1.33 0.93-1.86 2.13-1.78a1.62 1.62 0 0 1 1.63 1.87 1.71 1.71 0 0 1-1.76 1.64z"></path><path class="cls-2" d="m149.36 76.8l12.64 0c1.4 0 3 0 2.86-2 -0.13-1.73-1.73-1.42-2.89-1.43q-13.06 0-26.12 0c-1.18 0-2.74-0.24-2.85 1.49 -0.13 2 1.51 1.9 2.88 1.9 4.5 0.05 8.99 0.04 13.48 0.04z"></path><path class="cls-2" d="m131.51 87.5c2 0 4.08 0 6.11 0 1 0 1.91-0.44 1.82-1.68a1.52 1.52 0 0 0-1.71-1.38q-6.52-0.05-13 0c-1 0-2 0.45-1.83 1.67s1.1 1.42 2.12 1.42l6.52 0 -0.03-0.03z"></path><path class="cls-2" d="m151.68 99.71c2 0 4.06 0 6.09 0 0.88 0 1.66-0.36 1.76-1.3s-0.7-1.46-1.55-1.47q-6.29-0.06-12.58 0c-0.78 0-1.71 0.22-1.76 1.27 -0.05 1.32 1 1.46 2 1.48 1.98 0.06 4.01 0.03 6.04 0.02z"></path><path class="cls-2" d="m146.22 87.54c1.19-0.06 2.71 0.08 2.66-1.6s-1.56-1.54-2.75-1.53 -2.7-0.11-2.65 1.6 1.52 1.47 2.74 1.53z"></path><path class="cls-2" d="m182.88 74c-1.36 0.23-3.11-0.23-3 1.59s1.83 1.22 3 1.24 2.49 0.32 2.54-1.26c0.06-2.01-1.76-1.18-2.54-1.57z"></path><path class="cls-2" d="m168.62 96.87c-1 0.11-2.35-0.09-2.32 1.47 0 1.18 1.06 1.39 2.05 1.38s2.32 0 2.34-1.48c0.01-1.3-1.12-1.24-2.07-1.37z"></path><path class="cls-2" d="m172.5 76.83c1.23-0.11 2-0.68 2-1.73 0-1.33-0.93-1.86-2.13-1.78a1.62 1.62 0 0 0-1.63 1.87 1.71 1.71 0 0 0 1.76 1.64z"></path><text class="cls-3" transform="matrix(0.95 0.31 -0.31 0.95 134.5 48.15)">  +</text><text class="cls-4" transform="rotate(-10 60 17)" y="17.05" x="60.6">+</text><text class="cls-5" y="40.9" x="32.21">+</text><polygon class="cls-6" points="57.99 37.43 54.68 44.38 50.55 37.66 57.99 37.43"></polygon><polygon class="cls-6" points="105.31 20.91 105.41 13.21 111.97 17.58 105.31 20.91"></polygon><circle class="cls-7" cx="29.13" cy="53.5" r="3.41"></circle><circle class="cls-7" cx="21.55" cy="86.1" r="3.41"></circle><circle class="cls-7" cx="78.09" cy="43.97" r="2.09" transform="rotate(-16 -2 23)"></circle><circle class="cls-7" cx="119.35" cy="50.83" r="2.09" transform="rotate(-16 0 33)"></circle><g class="a"><g class="a"><path class="st0" d="m115.915 41.909c-0.697-0.813-1.713-1.278-2.788-1.278l-35.426 0c-0.581 0-1.045 0.465-1.045 1.045s0.465 1.045 1.045 1.045l35.426 0c0.465 0 0.929 0.203 1.22 0.552 0.29 0.348 0.436 0.813 0.377 1.278l-3.397 14.955c0 0.029 0 0.058 0 0.058 -0.203 1.249-1.307 2.178-2.555 2.178l-24.16 0c-0.581 0-1.045 0.465-1.045 1.045 0 0.581 0.465 1.045 1.045 1.045l24.16 0c2.294 0 4.211-1.626 4.588-3.891l3.397-14.955c0-0.029 0-0.058 0-0.058 0.174-1.103-0.145-2.178-0.842-3.02l0 0z"></path><path class="st0" d="m82.957 73.618c-2.671 0-4.849 2.178-4.849 4.849 0 2.672 2.178 4.849 4.849 4.849 2.672 0 4.849-2.178 4.849-4.849 0-2.671-2.178-4.849-4.849-4.849zm0 7.637c-1.539 0-2.788-1.249-2.788-2.788 0-1.539 1.249-2.788 2.788-2.788 1.539 0 2.788 1.249 2.788 2.788 0 1.539-1.249 2.788-2.788 2.788z"></path><path class="st0" d="m104.503 73.618c-2.671 0-4.849 2.178-4.849 4.849 0 2.672 2.178 4.849 4.849 4.849 2.672 0 4.849-2.178 4.849-4.849 0-2.671-2.178-4.849-4.849-4.849zm0 7.637c-1.539 0-2.788-1.249-2.788-2.788 0-1.539 1.249-2.788 2.788-2.788 1.539 0 2.788 1.249 2.788 2.788 0 1.539-1.249 2.788-2.788 2.788z"></path><path class="st0" d="m108.336 68.885l-28.893 0 -2.701-10.599 -5.256-22.737c-0.348-1.336-1.539-2.265-2.933-2.265l-6.766 0c-0.581 0-1.045 0.465-1.045 1.045s0.465 1.045 1.045 1.045l6.795 0c0.436 0 0.813 0.29 0.929 0.697l4.936 21.401c0 0.087 0 0.174 0.029 0.232l0.29 1.103 0 0.029c0 0 0 0 0 0.029l2.875 11.325c0.116 0.465 0.523 0.784 0.987 0.784l0.116 0 29.561 0c0.581 0 1.045-0.465 1.045-1.045s-0.465-1.045-1.016-1.045l0 0z"></path></g><g class="a"><g class="a"><path class="st1" d="m86.732 57.444c1.887-2.207 4.995-3.485 7.84-3.601 2.207-0.087 4.443 0.436 6.359 1.481 0.697 0.377 1.684 1.045 2.12 1.51 0.29 0.29 1.074-0.058 0.755-0.377 -4.646-4.646-13.532-4.24-17.8 0.726 -0.319 0.377 0.465 0.552 0.726 0.261l0 0 0 0z"></path></g><path class="st1" d="m89.142 48.326c0.145 0.61-0.203 1.22-0.726 1.394 -0.552 0.145-1.103-0.203-1.249-0.813 -0.145-0.61 0.203-1.22 0.726-1.394 0.552-0.174 1.103 0.203 1.249 0.813z"></path><path class="st1" d="m103.254 48.704c0.145 0.61-0.203 1.22-0.726 1.394 -0.552 0.145-1.103-0.203-1.249-0.813s0.203-1.22 0.726-1.394c0.552-0.174 1.132 0.203 1.249 0.813z"></path></g></g></g></svg>
+              </div>
+            {% endif %}
+            <div class='hidden' id='empty-cart'>
+              There are no items in this cart. Continue shopping....
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 185.42 99.73"><style>.a{fill:#888888}.b{fill:#7f7f7f}.cls-13,.cls-2,.cls-3,.cls-4,.cls-5{fill: #afafaf}.cls-3{font-size:17.95px}.cls-13,.cls-3,.cls-4,.cls-4{font-size:17.95px}.cls-5{font-size:17.95px}.cls-11,.cls-6,.cls-8,.cls-9{fill:none}.cls-11,.cls-6,.cls-7,.cls-8,.cls-9{stroke: #b2b2b2}.cls-6,.cls-9{stroke-miterlimit:10}.cls-6{stroke-width:0.75px}.cls-7{fill: rgba(0,0,0,0)}.cls-11,.cls-7,.cls-8{stroke-linecap:roundstroke-linejoin:round}.cls-8{stroke-width:3px}.cls-11{stroke-dasharray:1.93 2.9}.cls-12{mix-blend-mode:multiply}.cls-13{font-size:11.98px}</style><g class="cls-1"><path class="cls-2" d="m36.06 76.41l-12.65 0c-1.4 0-3 0-2.86-2 0.13-1.73 1.73-1.42 2.89-1.43q13.06 0 26.12 0c1.18 0 2.74-0.24 2.85 1.49 0.13 2-1.51 1.9-2.88 1.9 -4.53 0.05-8.98 0.05-13.47 0.04z"></path><path class="cls-2" d="m53.91 87.12c-2 0-4.08 0-6.11 0 -1 0-1.91-0.44-1.82-1.68a1.52 1.52 0 0 1 1.7-1.44q6.52-0.05 13 0c1 0 2 0.45 1.83 1.67s-1.1 1.42-2.12 1.42l-6.48 0 0 0.03z"></path><path class="cls-2" d="m33.74 99.33c-2 0-4.06 0-6.09 0 -0.88 0-1.66-0.36-1.76-1.3s0.7-1.46 1.55-1.47q6.29-0.06 12.58 0c0.78 0 1.71 0.22 1.76 1.27 0.05 1.32-1 1.46-2 1.48 -1.98 0.05-4.01 0.02-6.04 0.02z"></path><path class="cls-2" d="m39.2 87.15c-1.19-0.06-2.71 0.08-2.66-1.6s1.56-1.55 2.75-1.55 2.7-0.11 2.65 1.6 -1.56 1.49-2.74 1.55z"></path><path class="cls-2" d="m2.54 73.56c1.36 0.23 3.11-0.23 3 1.59s-1.83 1.22-3 1.24 -2.49 0.32-2.54-1.25c-0.06-1.97 1.76-1.14 2.54-1.58z"></path><path class="cls-2" d="m16.8 96.48c1 0.11 2.35-0.09 2.32 1.47 0 1.18-1.06 1.39-2.05 1.38s-2.32 0-2.34-1.48c-0.01-1.3 1.12-1.26 2.07-1.37z"></path><path class="cls-2" d="m12.92 76.44c-1.23-0.11-2-0.68-2-1.73 0-1.33 0.93-1.86 2.13-1.78a1.62 1.62 0 0 1 1.63 1.87 1.71 1.71 0 0 1-1.76 1.64z"></path><path class="cls-2" d="m149.36 76.8l12.64 0c1.4 0 3 0 2.86-2 -0.13-1.73-1.73-1.42-2.89-1.43q-13.06 0-26.12 0c-1.18 0-2.74-0.24-2.85 1.49 -0.13 2 1.51 1.9 2.88 1.9 4.5 0.05 8.99 0.04 13.48 0.04z"></path><path class="cls-2" d="m131.51 87.5c2 0 4.08 0 6.11 0 1 0 1.91-0.44 1.82-1.68a1.52 1.52 0 0 0-1.71-1.38q-6.52-0.05-13 0c-1 0-2 0.45-1.83 1.67s1.1 1.42 2.12 1.42l6.52 0 -0.03-0.03z"></path><path class="cls-2" d="m151.68 99.71c2 0 4.06 0 6.09 0 0.88 0 1.66-0.36 1.76-1.3s-0.7-1.46-1.55-1.47q-6.29-0.06-12.58 0c-0.78 0-1.71 0.22-1.76 1.27 -0.05 1.32 1 1.46 2 1.48 1.98 0.06 4.01 0.03 6.04 0.02z"></path><path class="cls-2" d="m146.22 87.54c1.19-0.06 2.71 0.08 2.66-1.6s-1.56-1.54-2.75-1.53 -2.7-0.11-2.65 1.6 1.52 1.47 2.74 1.53z"></path><path class="cls-2" d="m182.88 74c-1.36 0.23-3.11-0.23-3 1.59s1.83 1.22 3 1.24 2.49 0.32 2.54-1.26c0.06-2.01-1.76-1.18-2.54-1.57z"></path><path class="cls-2" d="m168.62 96.87c-1 0.11-2.35-0.09-2.32 1.47 0 1.18 1.06 1.39 2.05 1.38s2.32 0 2.34-1.48c0.01-1.3-1.12-1.24-2.07-1.37z"></path><path class="cls-2" d="m172.5 76.83c1.23-0.11 2-0.68 2-1.73 0-1.33-0.93-1.86-2.13-1.78a1.62 1.62 0 0 0-1.63 1.87 1.71 1.71 0 0 0 1.76 1.64z"></path><text class="cls-3" transform="matrix(0.95 0.31 -0.31 0.95 134.5 48.15)">  +</text><text class="cls-4" transform="rotate(-10 60 17)" y="17.05" x="60.6">+</text><text class="cls-5" y="40.9" x="32.21">+</text><polygon class="cls-6" points="57.99 37.43 54.68 44.38 50.55 37.66 57.99 37.43"></polygon><polygon class="cls-6" points="105.31 20.91 105.41 13.21 111.97 17.58 105.31 20.91"></polygon><circle class="cls-7" cx="29.13" cy="53.5" r="3.41"></circle><circle class="cls-7" cx="21.55" cy="86.1" r="3.41"></circle><circle class="cls-7" cx="78.09" cy="43.97" r="2.09" transform="rotate(-16 -2 23)"></circle><circle class="cls-7" cx="119.35" cy="50.83" r="2.09" transform="rotate(-16 0 33)"></circle><g class="a"><g class="a"><path class="st0" d="m115.915 41.909c-0.697-0.813-1.713-1.278-2.788-1.278l-35.426 0c-0.581 0-1.045 0.465-1.045 1.045s0.465 1.045 1.045 1.045l35.426 0c0.465 0 0.929 0.203 1.22 0.552 0.29 0.348 0.436 0.813 0.377 1.278l-3.397 14.955c0 0.029 0 0.058 0 0.058 -0.203 1.249-1.307 2.178-2.555 2.178l-24.16 0c-0.581 0-1.045 0.465-1.045 1.045 0 0.581 0.465 1.045 1.045 1.045l24.16 0c2.294 0 4.211-1.626 4.588-3.891l3.397-14.955c0-0.029 0-0.058 0-0.058 0.174-1.103-0.145-2.178-0.842-3.02l0 0z"></path><path class="st0" d="m82.957 73.618c-2.671 0-4.849 2.178-4.849 4.849 0 2.672 2.178 4.849 4.849 4.849 2.672 0 4.849-2.178 4.849-4.849 0-2.671-2.178-4.849-4.849-4.849zm0 7.637c-1.539 0-2.788-1.249-2.788-2.788 0-1.539 1.249-2.788 2.788-2.788 1.539 0 2.788 1.249 2.788 2.788 0 1.539-1.249 2.788-2.788 2.788z"></path><path class="st0" d="m104.503 73.618c-2.671 0-4.849 2.178-4.849 4.849 0 2.672 2.178 4.849 4.849 4.849 2.672 0 4.849-2.178 4.849-4.849 0-2.671-2.178-4.849-4.849-4.849zm0 7.637c-1.539 0-2.788-1.249-2.788-2.788 0-1.539 1.249-2.788 2.788-2.788 1.539 0 2.788 1.249 2.788 2.788 0 1.539-1.249 2.788-2.788 2.788z"></path><path class="st0" d="m108.336 68.885l-28.893 0 -2.701-10.599 -5.256-22.737c-0.348-1.336-1.539-2.265-2.933-2.265l-6.766 0c-0.581 0-1.045 0.465-1.045 1.045s0.465 1.045 1.045 1.045l6.795 0c0.436 0 0.813 0.29 0.929 0.697l4.936 21.401c0 0.087 0 0.174 0.029 0.232l0.29 1.103 0 0.029c0 0 0 0 0 0.029l2.875 11.325c0.116 0.465 0.523 0.784 0.987 0.784l0.116 0 29.561 0c0.581 0 1.045-0.465 1.045-1.045s-0.465-1.045-1.016-1.045l0 0z"></path></g><g class="a"><g class="a"><path class="st1" d="m86.732 57.444c1.887-2.207 4.995-3.485 7.84-3.601 2.207-0.087 4.443 0.436 6.359 1.481 0.697 0.377 1.684 1.045 2.12 1.51 0.29 0.29 1.074-0.058 0.755-0.377 -4.646-4.646-13.532-4.24-17.8 0.726 -0.319 0.377 0.465 0.552 0.726 0.261l0 0 0 0z"></path></g><path class="st1" d="m89.142 48.326c0.145 0.61-0.203 1.22-0.726 1.394 -0.552 0.145-1.103-0.203-1.249-0.813 -0.145-0.61 0.203-1.22 0.726-1.394 0.552-0.174 1.103 0.203 1.249 0.813z"></path><path class="st1" d="m103.254 48.704c0.145 0.61-0.203 1.22-0.726 1.394 -0.552 0.145-1.103-0.203-1.249-0.813s0.203-1.22 0.726-1.394c0.552-0.174 1.132 0.203 1.249 0.813z"></path></g></g></g></svg>
+              </div>
+          </div>
+
+
+
+          <div class='cart-summary' >
+            
+            <div class="col-md-12">
+              <div class="card mb-4 " style='background-color:transparent;'>
+                <div class="card-header py-3">
+                  <h3 class="mb-0 fw-bold">Cart summary</h3>
+                </div>
+                <div class="card-body" style='background-color:transparent;'>
+                  <ul class="list-group list-group-flush">
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0 " style='color:white;background-color:transparent;'>
+                      Price
+                      <span class='cart-total'>₹{{cart.total_no_discount}}</span>
+                      
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0" style='color:white;background-color:transparent;'>
+                      Offer discount
+                      <span>₹{{cart.total_discount_given}}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0" style='color:white;background-color:transparent;'>
+                      Coupon discount
+                      <span>₹{{cart.coupon_discount}}</span>
+                    </li>
+                    <li
+                      class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3" style='color:white;background-color:transparent;'>
+                      <div>
+                        <strong>Total amount</strong>
+                        <strong>
+                          <p class="mb-0"></p>
+                        </strong>
+                      </div>
+                      <span><strong class='cart-total'>₹{{cart.final_total}}</strong></span>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                    {% if request.user.cart.count != 0  %}
+                    <button type="button" class="btn btn-sm btn-outline-secondary ms-4 redeemable-button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" onclick="refreshIframe();">
+                      View Redeemable Coupons
+                    </button>
+                    <li class="list-group-item d-flex justify-content-between align-items-center px-0 apply-coupon mb-4" style='color:white;background-color:transparent;'>
+                      <div class="col-7 coupon-code-container">
+                        {% if request.user.cart.coupon %}
+                        <input type="text" name="coupon" class="form-control" value="{{request.user.cart.coupon.coupon.coupon_code}}" id="coupon_code" placeholder="Coupon Code" style='height:48px;'>
+                        {% else %}
+                        <input type="text" name="coupon" class="form-control" id="coupon_code" placeholder="Coupon Code" style='height:48px;'>
+                        {% endif %}
+                      </div>
+                      <span class='coupon-button-container'>
+                        {% if request.user.cart.coupon %}
+                        <button type="button" class="btn btn-sm btn-danger btn-lg btn-block coupon-button" onclick='remove_coupon()'>Remove Coupon</button>
+                        {% else %}
+                        <button type="button" class="btn btn-sm btn-outline-success btn-lg btn-block coupon-button" onclick='check_coupon()'>Apply Coupon</button>
+                        {% endif %}
+                      </span>
+                    </li>
+                  {% endif %}
+                  {% else %}
+                  <h6>Login to view coupons</h6>
+                  {% endif %}
+                  </ul>
+                  
+                  {% if request.user.cart.count != 0  %}
+                  
+                    <a id='checkout-btn' href="{% url 'checkout' %}"><button type="button" class="btn btn-primary btn-lg btn-block">
+                    Go to checkout
+                  </button></a>
+                  {% else %}
+                  <a id='shop-more' href="{% url 'home' %}"><button type="button" class="btn btn-primary btn-lg btn-block">
+                    Continue shopping....
+                  </button></a>
+                  {% endif %}
+                  <a id='shop-more' href="{% url 'home' %}"><button type="button" class="btn btn-primary btn-lg btn-block hidden">
+                    Continue shopping....
+                  </button></a>
+                </div>
+              </div>
+            </div>
+       
+
+          </div>
+
+
+
+        </div>
+      </section>
+</main>
+{% comment %} -------------------------MODAL FOR LISTING REDEEMABLE COUPONS---------------------------------- {% endcomment %}
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable bg-dark">
+    <div class="modal-content bg-dark">
+      <div class="modal-header bg-dark">
+        <h5 class="modal-title bg-dark" id="staticBackdropLabel">Redeemable Coupons</h5>
+        <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="redeemable_container">
+         
+        <iframe name='modal-iframe' src="{% url 'usercoupons' %}" width="100%" height="380" frameborder="0" sandbox="allow-same-origin allow-scripts allow-popups allow-forms allow-top-navigation"
+                        allowtransparency="true"></iframe>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        {% comment %} <button type="submit" class="btn btn-primary">Submit</button> {% endcomment %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock content %}
+
+{% block extrascript %}
+<script>
+  function refreshIframe(){
+    var ifr = document.getElementsByName('modal-iframe')[0];
+    ifr.src = ifr.src;
+  }
+  function check_coupon(){
+    var coupon_code = $('#coupon_code').val();
+    if(coupon_code != ''){
+    $.ajax({
+      data:{'coupon_code':coupon_code},
+      url:"/cart/add_coupon_to_cart/",
+      success: function(response){
+        if(response.message){
+          toastr.success(response.message);
+          $('.coupon-button').remove();
+          $('.coupon-button-container').append(`<button type="button" class="btn btn-sm btn-danger btn-lg btn-block coupon-button" onclick='remove_coupon()'>Remove Coupon</button>`)  //--------------------------------------------------------------
+          $("#coupon_code").attr('class', 'form-control');
+
+        }
+        
+        if(response.error_message){
+          toastr.error(response.error_message);
+        }
+      },
+    });
+    }
+  }
+  
+
+  function remove_coupon(){
+    $.ajax({
+      url:"/cart/remove_coupon_from_cart/",
+      success: function(response){
+        if(response.message){
+          $('.coupon-button').remove();
+          $('.coupon-button-container').append(`<button type="button" class="btn btn-sm btn-outline-success btn-lg btn-block coupon-button" onclick='check_coupon()'>Apply Coupon</button>`);
+          $('#coupon_code').val('');
+          toastr.error(response.message);
+        }
+      },
+    });
+    
+  }
+  $(document).ready(function(){
+    $.ajax({
+
+      url:"/user_coupon_check/",
+      success: function(response){
+        if(response.coupon_removed == true){
+          toastr.error("Coupon removed from cart(expired)")
+          $('.coupon-button').remove();
+          $('.coupon-button-container').append(`<button type="button" class="btn btn-sm btn-outline-success btn-lg btn-block coupon-button" onclick='check_coupon()'>Apply Coupon</button>`);
+          $('#coupon_code').val('');
+        }
+      },
+    });
+  });
+
+</script>
+{% endblock extrascript %}

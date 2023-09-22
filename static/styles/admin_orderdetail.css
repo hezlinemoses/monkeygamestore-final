@@ -1,0 +1,69 @@
+.order-container{
+    border: solid #363A3C .01rem;
+    margin-right: 50px !important;
+}
+
+
+
+.dark-light{
+    background-color: #212121 !important;
+}
+
+
+.list-group-item{
+    border-bottom: #212121;
+}
+
+.platform{
+    display: none;
+}
+
+@media (min-width:767px) {
+    
+    .flex-media{
+        display: flex !important;
+        
+    }
+    
+    .cart-summary{
+        width: 30%;
+        margin-top: 3rem;
+    }
+    .platform{
+        display: block;
+    }
+}
+
+@media (min-width:400px){
+    
+    .flex-media{
+        padding: 3rem;
+    }
+}
+
+
+.capital:first-letter {
+    text-transform: uppercase;
+}
+
+.card-body{
+    border-radius: 10%;
+}
+
+.card{
+    border:1px solid rgb(82, 82, 82);
+}
+
+.select{
+    background-color: transparent !important;
+    color: aliceblue;
+}
+select >option{
+    background-color: #121212 !important;
+    color: white !important;
+}
+
+.bg-bg{
+    background-color: #212121 !important;
+    color: white !important;
+}

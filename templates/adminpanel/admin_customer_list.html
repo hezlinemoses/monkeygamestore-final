@@ -1,0 +1,112 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_customer_list.css' %}"> {% endblock dynamic_css %}
+{% block dynamic %}
+
+    {% comment %} {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message | safe }}
+    </div>
+{% endfor %} {% endcomment %}
+ {% comment %} </div> {% endcomment %}
+
+<div class="table-responsive">
+
+    <table class="table table-hover align-middle mb-0 table-dark bg-white">
+        <thead class="bg-light">
+          <tr>
+            
+            <th style="width: 25%;">Basic Details</th>
+            <th>Verified</th>
+            <th>Blocked</th>
+            <th style="width: 25%;">Actions</th>
+          </tr>
+        </thead>
+        {% for customer in customers %}
+        <tbody>
+          <tr>
+           
+            <td>
+              <div class="d-flex align-items-center">
+                {% comment %} <img
+                    src="https://mdbootstrap.com/img/new/avas/8.jpg"
+                    alt=""
+                    style="width: 45px; height: 45px"
+                    class="rounded-circle"
+                    /> {% endcomment %}
+                <div class="ms-3">
+                  <p class="fw-bold mb-1">{{customer.username}}</p>
+                  <p class="text-muted mb-0">{{customer.email}}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              <p class="fw-normal mb-1">{% if customer.is_verified %}Yes {% else %}No{% endif %}</p>
+              
+            </td>
+            <td>
+              <span class="badge badge-success rounded-pill d-inline">{% if not customer.is_blocked %}No {% else %}Yes{% endif %}</span>
+            </td>
+            
+            <td>
+                {% if not customer.is_blocked %}<a style="text-decoration: none; " href= "{% url 'blockcustomer' customer.id %}"><i style="color:red"onclick="return confirm('Are you sure to block '+' {{customer.username}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                        Block
+                    </button> </i>
+                    <div class="message">
+                      {% if messages %}
+                      {% for message in messages %}
+                         <h3 class="message">
+                          <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                          <script>
+                            Swal.fire({
+                              icon: 'success',
+                             // title: '{{customer}}',
+                              text: "{{message}}",
+                            })  
+                          </script>
+                        </h3>
+                      {% endfor %}
+                      {% endif %} </div>
+                    
+
+                </a> {% else %}<a style="text-decoration: none; " href= "{% url 'blockcustomer' customer.id %}"><i style="color:red"onclick="return confirm('Are you sure to unblock '+' {{customer.username}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                        Unblock
+                    </button>
+                    <div class="message">
+                      {% if messages %}
+                      {% for message in messages %}
+                         <h3 class="message">
+                          <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                          <script>
+                            Swal.fire({
+                              icon: 'success',
+                             // title: '{{customer}}',
+                              text: "{{message}}",
+                            })  
+                          </script>
+                        </h3>
+                      {% endfor %}
+                      {% endif %} 
+                </a>{% endif %}
+                
+              
+            </td>
+          </tr>
+         
+        </tbody>
+        {% endfor %}
+      </table>
+    </div>
+
+
+
+
+
+
+
+{% endblock dynamic %}

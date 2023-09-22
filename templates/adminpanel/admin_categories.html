@@ -1,0 +1,138 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_categories.css' %}"> {% endblock dynamic_css %}
+{% block dynamic %}
+<div class="message">
+  
+    {% comment %} {% for message in messages %}
+    <div class="alert {{ message.tags }} alert-dismissible shadow fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        {{ message | safe }}
+    </div>
+{% endfor %} {% endcomment %}
+ </div>
+
+<div class="table-responsive">
+  <a href={% url 'admin_addcategory' %}>
+    <button type="button" class="btn btn-link btn-sm btn-rounded btn-addbutton">
+        Add New Category
+    </button>
+</a>
+
+    <table class="table table-hover align-middle mb-0 table-dark bg-white">
+        <thead class="bg-light">
+          <tr>
+            
+            <th style="width: 25%;">Category Name</th>
+            <th>Sub-Categories</th>  
+            <th>Status</th>
+            <th style="width: 25%;">Actions</th>
+          </tr>
+        </thead>
+        {% for category in categories %}
+        <tbody>
+          <tr>
+           
+            <td>
+              <div class="d-flex align-items-center">
+                {% comment %} <img
+                    src="https://mdbootstrap.com/img/new/avat/8.jpg"
+                    alt=""
+                    style="width: 45px; height: 45px"
+                    class="rounded"
+                    /> {% endcomment %}
+                <div class="ms-3">
+                  <p class="fw-bold mb-1">{{category.name}}</p>
+                  <p class="text-muted mb-0">{{category.description}}</p>
+                </div>
+              </div>
+            </td>
+            <td>
+              
+                {% for sub_category in category.sub_categories.all %}
+                <span class="badge badge-success rounded-pill d-inline">
+                    {{ sub_category.name}}
+                  </span>
+                  <br>
+                {% endfor %}
+            
+              
+              
+            </td>
+            <td>
+              <p class="fw-normal mb-1">{% if category.is_active %}Enabled {% else %}Disabled{% endif %}</p>
+            </td>
+            
+            <td>
+              <a href="{{category.get_absolute_url}}/addsubcategory/">
+                <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                    Add Sub-category
+                </button>
+                </a> 
+
+                <a style="text-decoration: none;" href= "{% url 'disablecategory' category.slug %}">
+                  {% if category.is_active %}
+                  <i style="color:red"onclick="return confirm('Are you sure to disable '+' {{category.name}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                        Disable
+                    </button></i>
+                    
+
+                    {% else %}
+                    <i style="color:red"onclick="return confirm('Are you sure to enable '+' {{category.name}} ?')">
+                      <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                          Enable
+                      </button></i>
+                    
+
+                      {% endif %}
+                </a> 
+
+                <a href="{{category.get_absolute_url}}/edit/">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                        Edit
+                    </button>
+                </a>
+                
+                <a href="{{category.get_absolute_url}}/delete/">
+                
+                    <i style="color:red"onclick="return confirm('Are you sure to delete '+' {{category.name}} ?')">
+                      <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                          Delete
+                      </button></i>
+                      {% if messages %}
+                        {% for message in messages %}
+                           <h3 class="message">
+                            <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                            <script>
+                              Swal.fire({
+                                {% comment %} icon: 'success', {% endcomment %}
+                                {% comment %} title: '{{category.name}}', {% endcomment %}
+                                text: "{{message}}",
+                              })  
+                            </script>
+                          
+                        {% endfor %}
+                        {% endif %}
+                    {% comment %} <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                      Delete
+                    </button> {% endcomment %}
+                </a>
+              
+            </td>
+          </tr>
+         
+        </tbody>
+        {% endfor %}
+      </table>
+    </div>
+
+
+
+
+
+
+
+{% endblock dynamic %}

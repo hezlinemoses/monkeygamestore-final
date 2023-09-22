@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extracss %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock extracss %}
+{% block content %}
+  {% comment %} <h1>Verify your account</h1>
+  <form method="post">
+    {% csrf_token %}
+   {% if messages %}
+    {% for message in messages %}
+        <h3 class="loginerror"><script>alert("{{ message }}")</script></h3>
+    {% endfor %}
+    {% endif %} 
+    
+    {{ form.as_p }}
+    <button type="submit">Verify</button>
+  </form>
+  resend verification : {% endcomment %}
+
+  <div class="text-center container-main my-5">
+    
+    <main class="form-signin">
+      <form action="" method="post">
+        {% csrf_token %}
+     <div class="message">
+       {% if messages %}
+       {% for message in messages %}
+          <h3 class="message">{{ message }}</h3>
+       {% endfor %}
+       {% endif %} 
+    </div>
+       
+        <img class="mb-4 brand-img" src={% static '/images/base/brand-img.png' %} alt="" width="72" height="72">
+        <h1 class="h3 mb-3 fw-normal">OTP Login</h1>
+        <div>
+          <div>
+            Enter the OTP send to <span id='phonenumber'>{{phone}}</span>
+          </div>
+          <div>
+            
+          </div>
+        </div>
+       
+        <div class="form-floating mb-3">
+          <input type="code" name="code" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <label for="floatingInput">OTP</label>
+        </div>
+        <div class='username-edit mb-2'>
+          {% if phoneform %}
+          <i style='font-size:1rem;' class="fas fa-edit text-success" data-bs-toggle="modal" data-bs-target="#staticBackdropPhone">Change phone number</i>{% endif %}
+      </div>
+        {% comment %} <div class="form-floating">
+          <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+          <label for="floatingPassword">Password</label>
+        </div> {% endcomment %}
+    
+        <!-- <div class="checkbox mb-3">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div> -->
+        <button class="w-100 btn btn-lg btn-primary mb-3 signbtn" type="submit">Verify</button>
+        <br>
+        {% comment %} <a class="otplink " href={% url 'otplogin' %}><div class="w-20 btn btn-lg otplogin btn-success" >OTP Login</button></a> {% endcomment %}
+        
+      </form>
+    </main>
+    
+    <!-- Modal for phone number change change-->
+    <div class="modal fade close-modal" id="staticBackdropPhone" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog  bg-dark">
+        <div class="modal-content bg-dark">
+          <div class="modal-header bg-dark">
+            <h5 class="modal-title bg-dark" id="staticBackdropLabel">Enter New Phone Number</h5>
+            <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close" onclick="updateall();"></button>
+          </div>
+          <div class="modal-body">
+           <form class='phone-change-form-ajax' method='post'>
+              {% csrf_token %}
+              {{phoneform|crispy}}
+              <button type="submit" class="btn btn-outline-success">Submit</button>
+           </form>
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="updateall();">Close</button>
+            {% comment %} <button type="submit" class="btn btn-primary">Submit</button> {% endcomment %}
+          </div>
+        </div>
+      </div>
+    </div>
+        
+  </div>
+{% endblock %}
+
+{% block extrascript %} 
+
+<script>
+  $(document).ready(function () {
+    // catch the form's submit event
+    $('.phone-change-form-ajax').submit(function () {
+        // create an AJAX call
+        $.ajax({
+            data: $(this).serialize(), // get the form data
+            type: $(this).attr('method'), // GET or POST
+            url: "{% url 'verification' %}",
+            // on success
+            success: function (response) {
+              if(response.error_message){
+                toastr.error(response.error_message);
+              }
+              
+              if(response.success_message){
+                toastr.success(response.success_message);
+                $('#staticBackdropPhone').modal('hide');
+                $('#phonenumber').html(`${response.phonenumber}`)
+              }
+                
+                
+                
+            },
+            // on error
+            error: function (response) {
+                // alert the error if any error occured
+                alert('test2');
+                
+                
+            }
+        });
+        return false;
+    });
+})
+</script>
+
+{% endblock extrascript %}

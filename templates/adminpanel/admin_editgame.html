@@ -1,0 +1,209 @@
+
+
+
+
+{% extends 'adminpanel/admin_dashboard.html' %}
+{%load crispy_forms_tags %} 
+{% load static %}
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/editgame.css" %}"> {% endblock dynamic_css %}
+{% block style %}
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+{% endblock style %}
+
+{% block dynamic %}
+
+
+
+{% comment %} <div class=" container-main flex-column">
+    <span>Edit Game > {{game_edit.title}}</span>
+    
+  <main class="form-signin">
+    <form action="" method="post">
+      {% csrf_token %}
+      
+      <div class="message">
+        {% if messages %}
+        {% for message in messages %}
+           <h3 class="message">{{ message }}</h3>
+        {% endfor %}
+        {% endif %} 
+     </div>
+
+
+   
+     
+     
+
+    
+        {{gameform|crispy}}
+
+        <hr>
+        {% for form in descforms %}
+        {{form|crispy}}
+        
+        <hr>
+        {% endfor %}
+
+
+
+        
+        <button class="w-30 btn btn-lg btn-primary mb-3 signbtn" type="submit">Update</button>
+    </form>
+  </main>
+  
+  
+      
+</div> {% endcomment %}
+
+
+<main class="container-fluid" style="width:100%;">
+  <div class="col-12 col-sm-7 col-md-6 col-lg-4">
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <div class="message">
+      {% if messages %}
+      {% for message in messages %}
+         <h3 class="message">{{ message }}</h3>
+      {% endfor %}
+      {% endif %} 
+   </div>
+
+  
+    <h1 class="h3 mb-3 fw-normal"><u>Add Game</u></h1>
+    
+    
+    
+      {{gameform|crispy}}
+
+     
+
+      {% if formset %}
+
+      <hr>
+      Description : 
+      {{formset.management_form}}
+      <div id='desc-form-list'>
+        {% for form in formset %}
+          <div class='desc-form'>
+          {{form|crispy}}
+          <hr>
+          </div>
+        {% endfor %}
+      </div>
+
+      <div id='empty-form' class='hidden'>{{formset2.empty_form|crispy}}
+        
+        
+        <hr>
+        
+      </div>
+      <button type='button' class='btn btn-danger' onclick="removelastForm();" id='remove-form'> Remove Form</button>
+    
+      <button id='add-more'  class='btn btn-success' type='button'>Add More</button>
+      <br>
+      
+      
+      {% endif %}
+      <br>
+      
+      <button class="w-30 btn btn-lg btn-primary signbtn" type="submit">Add New Game</button>
+
+
+     
+     
+      
+  </form>
+</div>
+</main>
+<script>
+ 
+</script>
+<script>
+ 
+  const addMoreBtn = document.getElementById('add-more')
+  const totalNewForms = document.getElementById('id_form-TOTAL_FORMS')
+  const currentDescForms = document.getElementsByClassName('desc-form')
+  let currentFormCount = currentDescForms.length
+  if (currentFormCount==1){
+    const removeBtn = document.getElementById('remove-form')
+    removeBtn.setAttribute('class','hidden')
+  } 
+
+  console.log(currentFormCount)
+  addMoreBtn.addEventListener('click', add_new_form)
+  
+ 
+
+  function add_new_form(event){
+    if (event){
+      event.preventDefault()
+    }
+    console.log(currentFormCount)
+
+   
+    const formCopyTarget = document.getElementById('desc-form-list')
+    
+    const copyEmptyFormEl = document.getElementById('empty-form').cloneNode(true)
+    copyEmptyFormEl.setAttribute('class','desc-form')
+    copyEmptyFormEl.setAttribute('id',`form-${currentFormCount}`)
+    console.log(copyEmptyFormEl)
+    const regex = new RegExp('__prefix__', 'g')
+    copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount)
+    currentFormCount = currentFormCount+1
+    totalNewForms.setAttribute('value',currentFormCount)
+    console.log(currentFormCount)
+    formCopyTarget.append(copyEmptyFormEl)
+
+    if (currentFormCount>1){
+      const removeBtn = document.getElementById('remove-form')
+      removeBtn.setAttribute('class','btn btn-danger')
+    }
+
+  }
+
+  function removelastForm() {
+  
+    console.log("asdffffff")
+    console.log(currentFormCount)
+    const lastForm = document.getElementById(`form-${currentFormCount-1}`)
+    console.log(lastForm)
+    lastForm.setAttribute('class','hidden')
+    lastForm.setAttribute('id','deleted')
+    currentFormCount = currentFormCount-1
+    totalNewForms.setAttribute('value',currentFormCount)
+    console.log(currentFormCount)
+    if (currentFormCount==1){
+      const removeBtn = document.getElementById('remove-form')
+      removeBtn.setAttribute('class','hidden')
+    }
+  }
+
+  console.log(currentFormCount)
+
+
+
+</script>
+
+
+{% endblock dynamic %}
+
+
+
+
+
+

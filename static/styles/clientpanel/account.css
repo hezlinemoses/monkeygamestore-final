@@ -1,0 +1,40 @@
+.dynamic{
+    border: solid 2px #363A3C;
+    margin-right: 20px;
+    padding: 3%;
+}
+.letter-space{
+    letter-spacing: .2rem;
+}
+input[type="text"] {
+    margin-bottom: -1px;
+    /* border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0; */
+    color: white !important;
+    background-color: #202020 !important;
+    border: solid rgba(255, 255, 255, 0.3) 1px;
+    
+    border-radius: 4px;
+  }
+input[type="email"] {
+margin-bottom: -1px;
+/* border-bottom-right-radius: 0;
+border-bottom-left-radius: 0; */
+color: white !important;
+background-color: #202020 !important;
+border: solid rgba(255, 255, 255, 0.3) 1px;
+
+border-radius: 4px;
+}
+
+
+
+.form-floating > .form-control-plaintext:focus, .form-floating > .form-control-plaintext:not(:placeholder-shown), .form-floating > .form-control:focus, .form-floating > .form-control:not(:placeholder-shown) {
+    /* padding-top: 3rem !important;
+    padding-bottom: 1.625rem; */
+    padding-left: 2rem;
+  }
+
+  .username-edit{
+    border-right: solid 2px #363A3C !important;
+  }

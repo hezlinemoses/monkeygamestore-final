@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load static %}
+{% block extracss %} <link href="{% static 'styles/clientpanel/store.css' %}" rel="stylesheet"> {% endblock extracss %}
+
+{% block content %}
+<main>
+<section class="cardsection">
+    <h3 class="mx-3">Categories <span>></span></h3>
+    <hr class="mx-3">
+    <div class="card-overflow container-fluid">
+      <div class="recentcards d-flex flex-row row">
+        {% for category in categories %}
+        <div class="col-4">
+          <img class="card-img-top" src="/{{game.main_banner}}" alt="" style="height:300px; width:100%">
+          <div class="card-body d-flex flex-column justify-content-center align-items-center">
+            <h5 class="card-text">{{category.name}}</h5>
+            
+            
+          </div>
+        </div>
+        {% endfor %}
+        
+      </div>
+    </div>
+  
+  
+  </section> 
+
+
+
+  <section class="cardsection">
+    <h3 class="mx-3">Games <span>></span></h3>
+    <hr class="mx-3">
+    <div class="card-overflow container-fluid">
+      <div class="recentcards d-flex flex-row row">
+        {% for game in games %}
+        <div class="col-4">
+          <img class="card-img-top" src="/media/{{game.thumbnail}}" alt="" style="height:300px; width:100%">
+          <div class="card-body">
+            <h5 class="card-title">EDITION NAME</h5>
+            <p class="card-text">{{game.title}}</p>
+            
+          </div>
+        </div>
+        {% endfor %}
+        
+      </div>
+    </div>
+  
+  
+  </section> 
+
+</main>
+
+{% endblock content %}

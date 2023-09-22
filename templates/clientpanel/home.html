@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %} <link href="{% static 'styles/clientpanel/home.css' %}" rel="stylesheet"> {% endblock extracss %}
+{% block content %}
+
+<main>
+<div id="myCarousel" class="carousel slide d-flex space-between" data-bs-ride="carousel">
+   <div class="carousel-indicators">
+     <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+     <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+     <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+   </div>
+   <div class="carousel-inner container-fluid">
+      {% for game in games|slice:":3" %}
+         {% if forloop.first %}
+         <div class="carousel-item active">
+         {% else %}
+         <div class="carousel-item">
+         {% endif %}
+     
+       <img class="img-fluid" src="/media/{{game.main_banner}}" alt="" style="height:100%; width:100%">
+
+       <div class="container">
+         <div class="carousel-caption text-start">
+           {% comment %} <h1>{{game.title}}</h1>
+           <p>Some representative placeholder content for the first slide of the carousel.</p> {% endcomment %}
+           {% comment %} <p><button class="btn btn-lg btn-primary update-cart item-remove" data-game={{game.id}} data-action="add"  id="game-banner-{{game.id}}" onclick="removeItem('game-banner-{{game.id}}')">Add To Cart</button></p> {% endcomment %}
+         </div>
+       </div>
+     </div>
+     
+    {% endfor %}
+   </div>
+   <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+     <span class="visually-hidden">Previous</span>
+   </button>
+   <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+     <span class="carousel-control-next-icon" aria-hidden="true"></span>
+     <span class="visually-hidden">Next</span>
+   </button>
+ </div>
+ <hr>
+ </main>
+ 
+ <section class="cardsection">
+  <h3 class="">Recently Released<span>></span></h3>
+  <hr class="">
+  <div class="card-overflow container-fluid">
+    
+    
+    <div class="recentcards d-flex flex-row flex-nowrap">
+      {% for game in games %}
+      <div class="card">
+        <a href="{% url 'gamedetail' game.id %}">
+        <img class="card-img-top" src="/media/{{game.main_banner}}" alt="" style="height:180px; width:100%"></a>
+        <div class="card-body">
+          {% comment %} <div class="card-title">EDITION NAME</div> {% endcomment %}
+          <span class="card-text">{{game.title}}</span>
+          {% if game.discount_status != "None" %}
+          <div class="disc-price d-flex">
+            <div class="price">
+              <span class="text-muted me-3" style="color:rgb(245, 245, 245);"><del>₹{{game.base_price}}</del></span>
+              <span>₹{{game.discounted_price}}</span>
+            </div>
+            <div class="disc_name">
+              
+            </div>
+          </div>
+          {% else %}
+          <div class="disc-price d-flex"><span style="color:rgb(245, 245, 245);"> ₹{{game.base_price}}</span></div>
+          {% endif %}
+          
+          <button data-game={{game.id}} data-action="add" class="btn btn-outline-secondary add-btn my-2 update-cart item-remove" id="game-{{game.id}}" onclick="removeItem('game-{{game.id}}')">Add to Cart</button>
+        </div>
+      
+      </div>
+      {% endfor %}
+      
+    </div>
+  </div>
+
+
+</section> 
+
+{% endblock content %}
+
+{% block extrajs %} <script>
+
+
+</script>{% endblock extrajs %}

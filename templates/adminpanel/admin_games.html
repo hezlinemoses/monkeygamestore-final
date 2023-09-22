@@ -1,0 +1,122 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_games.css' %}"> {% endblock dynamic_css %}
+{% block dynamic %}
+
+{% if messages %}
+  {% for message in messages %}
+      
+      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          
+          
+          text: "{{message}}",
+        })  
+      </script>
+    
+  {% endfor %}
+{% endif %}
+
+<div class="table-responsive" >
+  <a href={% url 'admin_addgame' %}>
+    <button type="button" class="btn btn-link btn-sm btn-rounded btn-addbutton">
+        Add New Game
+    </button>
+</a>
+
+    <table class="table table-hover align-middle mb-0 table-dark bg-white " style="min-width:600px;">
+        <thead class="bg-light">
+          <tr>
+            {% comment %} <th style="width: 4%;">select</th> {% endcomment %}
+            <th style="width: 25%;">Game Basic Details</th>
+            <th>Categories</th>  
+            <th>No.of sales</th>
+            <th>Status</th>
+            <th style="width: 25%;">Actions</th>
+          </tr>
+        </thead>
+        {% for game in games %}
+        <tbody>
+          <tr>
+           
+            <td>
+              <div class="d-flex align-items-center">
+                <img
+                    src="/media/{{game.thumbnail}}"
+                    alt=""
+                    style="width: 45px; height: 45px"
+                    class="rounded"
+                    />
+                <div class="ms-3">
+                  <p class="fw-bold mb-1">{{game.title}}</p>
+                  {% comment %} <p class="text-muted mb-0">{{game.description}}</p> {% endcomment %}
+                </div>
+              </div>
+            </td>
+            <td>
+              
+                {% for category in game.categories.all %}
+                <span class="badge badge-success rounded-pill d-inline">
+                    {{ category.name}}
+                  </span>
+                  <br>
+                {% endfor %}
+            
+              
+              
+            </td>
+            <td>
+              <p class="fw-normal mb-1">{{game.salecount}}</p>
+            </td>
+            <td>
+              <p class="fw-normal mb-1">{% if game.is_active %}Enabled {% else %}Disabled{% endif %}</p>
+            </td>
+            
+            <td>
+                <a style="text-decoration: none;" href= "{% url 'disablegame' game.id %}">
+                  {% if game.is_active %}
+                  <i style="color:red"onclick="return confirm('Are you sure to disable '+' {{game.title}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                        Disable
+                    </button></i>
+                    
+
+                    {% else %}
+                    <i style="color:red"onclick="return confirm('Are you sure to enable '+' {{game.title}} ?')">
+                      <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                          Enable
+                      </button></i>
+                    
+
+                      {% endif %}
+                </a> 
+
+                <a href="{{game.get_absolute_url}}/edit/">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+                        Edit
+                    </button>
+                </a>
+                
+                <a href="{{game.get_absolute_url}}/delete/">
+                  <i style="color:red"onclick="return confirm('Are you sure to delete '+' {{game.title}} ?')">
+                  <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                      Delete
+                  </button></i>
+              </a>
+              
+            </td>
+          </tr>
+         
+        </tbody>
+        {% endfor %}
+      </table>
+    </div>
+
+
+
+
+
+
+
+{% endblock dynamic %}

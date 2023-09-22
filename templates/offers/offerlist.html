@@ -1,0 +1,216 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_offerlist.css' %}"> {% endblock dynamic_css %}
+{% block customhead %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock customhead %}
+{% block dynamic %}
+
+{% if messages %}
+  {% for message in messages %}
+      
+      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          
+          
+          text: "{{message}}",
+        })  
+      </script>
+    
+  {% endfor %}
+{% endif %}
+
+
+<div class="row w-80 mx-1 mb-4">
+    <div class="card bg-dark col-md-3 p-0 me-md-2 me-0" >
+        <div class="card-header">
+          Category Offer Overview
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between"><span>Ongoing offers</span><span>{{ongoing_category_offers_count}}</span></li>
+          <li class="list-group-item d-flex justify-content-between"><span>Upcoming offers</span><span>{{upcoming_category_offers_count}}</span></li>
+          <li class="list-group-item d-flex justify-content-between"><span>Expired offers</span><span>{{expired_category_offers_count}}</span></li>
+        </ul>
+      </div>
+      <div class="card bg-dark col-md-3 p-0" >
+        <div class="card-header">
+          Product Offer Overview
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item d-flex justify-content-between"><span>Ongoing offers</span><span>{{ongoing_product_offers_count}}</span></li>
+          <li class="list-group-item d-flex justify-content-between"><span>Upcoming offers</span><span>{{upcoming_product_offers_count}}</span></li>
+          <li class="list-group-item d-flex justify-content-between"><span>Expired offers</span><span>{{expired_product_offers_count}}</span></li>
+        </ul>
+      </div>
+</div>
+<hr class='me-5'>
+
+<h4 class='fw-bold mb-2'>Category Offers</h4>
+<a href={% url 'addcategoryoffer' %}>
+    <button type="button" class="btn btn-link btn-sm btn-rounded btn-addbutton">
+        Add New Category Offer
+    </button>
+</a>
+<div class='orders-contain mb-4'>
+    <table id="categoryoffertable" class="display nowrap bg-dark" style="width:100%">
+        <thead>
+            <tr>
+                <th>Offer id</th>
+                <th>Offer name</th>
+                <th>Category</th>
+                <th>Discount Percentage</th>
+                <th>Valid from</th>
+                <th>Valid till</th>
+                <th>Status</th>
+                <th>Actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in category_offers %}
+            <tr>
+                <td><a href="{% url 'editcategoryoffer' offer.id %}">{{offer.id}}</a></td>
+                <td>{{offer.name}}</td>
+                <td>{{offer.category}}</td>
+                <td>{{offer.discount_percentage}}</td>
+                <td>{{offer.valid_from}}</td>
+                <td>{{offer.valid_till}}</td>
+                <td>{{offer.status}}</td>
+                <td>
+                  {% if offer.status == "Upcoming" %}
+                  <a style="text-decoration: none;" href= "{% url 'deletecategoryoffer' offer.id %}">
+                    <i style="color:red"onclick="return confirm('Are you sure to delete '+' {{offer.name}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                        Delete
+                    </button></i>
+                  </a>
+                  {% elif offer.status == "Ongoing" %}
+                  <a style="text-decoration: none;" href= "{% url 'disablecategoryoffer' offer.id %}">
+                    <i style="color:red"onclick="return confirm('Are you sure you want to stop '+' {{offer.name}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                        Stop now
+                    </button></i>
+                  </a>
+                  {% endif %}
+                  
+                </td>
+                
+            </tr>
+            {% endfor %}
+        <tbody>
+    </table>
+</div>
+
+<hr class='me-5'>
+
+<h4 class='fw-bold mb-2'>Product Offers</h4>
+<a href={% url 'addproductoffer' %}>
+    <button type="button" class="btn btn-link btn-sm btn-rounded btn-addbutton">
+        Add New Product Offer
+    </button>
+</a>
+<div class='orders-contain mb-4'>
+    <table id="productoffertable" class="display nowrap bg-dark" style="width:100%">
+        <thead>
+            <tr>
+                <th>Offer id</th>
+                <th>Offer name</th>
+                <th>Category</th>
+                <th>Discount Percentage</th>
+                <th>Valid from</th>
+                <th>Valid till</th>
+                <th>Status</th>
+                <th>Actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for offer in product_offers %}
+            <tr>
+                <td><a href="{% url 'editproductoffer' offer.id %}">{{offer.id}}</a></td>
+                <td>{{offer.name}}</td>
+                <td>{{offer.category}}</td>
+                <td>{{offer.discount_percentage}}</td>
+                <td>{{offer.valid_from}}</td>
+                <td>{{offer.valid_till}}</td>
+                <td>{{offer.status}}</td>
+                <td>
+                  {% if offer.status == "Upcoming" %}
+                  <a style="text-decoration: none;" href= "{% url 'deleteproductoffer' offer.id %}">
+                    <i style="color:red"onclick="return confirm('Are you sure to delete '+' {{offer.name}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                        Delete
+                    </button></i>
+                  </a>
+                  {% elif offer.status == "Ongoing" %}
+                  <a style="text-decoration: none;" href= "{% url 'disableproductoffer' offer.id %}">
+                    <i style="color:red"onclick="return confirm('Are you sure you want to stop '+' {{offer.name}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-block">
+                        Stop now
+                    </button></i>
+                  </a>
+                  {% endif %}
+                  </td>
+                
+            </tr>
+            {% endfor %}
+        <tbody>
+    </table>
+</div>
+{% endblock dynamic %}
+
+{% block extrascript %}
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#categoryoffertable').DataTable({
+          scrollY: 400,
+          scrollX: true,
+          order: [[6, 'asc']],
+          columnDefs: [ {
+            "targets": 6,
+            render: function(data, type, row, meta) {
+                if (type === 'sort') {
+                  switch (data) {
+                    case 'Ongoing':0
+                      return 0;
+                    case 'Upcoming':
+                      return 1;
+                    case 'Expired':
+                      return 2;
+                  }
+                }
+                
+                return data;
+              }
+          } ],
+        });
+      });
+
+      $(document).ready(function () {
+        $('#productoffertable').DataTable({
+            scrollY: 400,
+            scrollX: true,
+            order: [[6, 'asc']],
+            columnDefs: [ {
+                "targets": 6,
+                render: function(data, type, row, meta) {
+                    if (type === 'sort') {
+                      switch (data) {
+                        case 'Ongoing':
+                          return 0;
+                        case 'Upcoming':
+                          return 1;
+                        case 'Expired':
+                          return 2;
+                      }
+                    }
+                    
+                    return data;
+                  }
+              } ],
+          });
+        });
+    </script>{% endblock extrascript %}

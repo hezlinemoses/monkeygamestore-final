@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  monkeygamestore:
+    build:
+      context: .
+    volumes:
+      - .:/monkeygamestore
+    command: bash -c "supervisord -c /etc/supervisor/supervisord.conf && ln -s /etc/supervisor/supervisord.conf /etc/supervisord.conf && gunicorn MonkeyGameStore.wsgi --bind 0.0.0.0:8015 --workers 4"
+    # command: python manage.py runserver
+    image: monkeygamestore:1.0
+    container_name: monkey_game_store_container
+    env_file:
+      - ./.env
+    ports:
+      - "8015:8015"
+    depends_on:
+      - redis_service
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:8080"
+    volumes:
+      - ./nginx/nginx-setup.conf:/etc/nginx/conf.d/default.conf
+      - ./static:/home/static:ro
+      - ./media:/home/media:ro
+    depends_on:
+      - monkeygamestore
+  
+  redis_service:
+    image: redis:7.0.5-alpine
+    volumes:
+      - ./redis-backup:/data
+    ports:
+      - "6379:6379"

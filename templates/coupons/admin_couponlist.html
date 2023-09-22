@@ -1,0 +1,111 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_offerlist.css' %}"> {% endblock dynamic_css %}
+{% block customhead %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock customhead %}
+{% block dynamic %}
+
+{% if messages %}
+  {% for message in messages %}
+      
+      <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+      <script>
+        Swal.fire({
+          
+          
+          text: "{{message}}",
+        })  
+      </script>
+    
+  {% endfor %}
+{% endif %}
+
+<h4 class='fw-bold mb-2'>Coupons</h4>
+<a href={% url 'addcoupon' %}>
+    <button type="button" class="btn btn-link btn-sm btn-rounded btn-addbutton">
+        Add New Coupon
+    </button>
+</a>
+<div class='orders-contain mb-4'>
+    <table id="coupontable" class="display nowrap bg-dark" style="width:100%">
+        <thead>
+            <tr>
+                <th>Coupon id</th>
+                <th>Coupon Code</th>
+                <th>Status</th>
+                <th>Discount Type</th>
+                <th>Discount Value</th>
+                <th>Usage</th>
+                <th>Actions</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for cp in coupons %}
+            <tr>
+                <td><a href="{% url 'editcoupon' cp.id %}">{{cp.id}}</a></td>
+                <td>{{cp.coupon_code}}</td>
+                <td>{{cp.status}}</td>
+                <td>{{cp.discount_type}}</td>
+                <td>{% if cp.discount_type == 'Percentage' %}
+                    {{cp.discount_percent_value}}%
+                    {% else %}
+                    ₹{{cp.discount_amount_value}}
+                    {% endif %}
+                </td>
+                <td>{{cp.usage_count}}</td>
+                <td>
+                  {% if cp.status == "Upcoming" %}
+                  <a style="text-decoration: none;" href= "{% url 'deletecoupon' cp.id %}">
+                    <i style="color:red"onclick="return confirm('Are you sure to delete '+' {{cp.coupon_code}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                        Delete
+                    </button></i>
+                  </a>
+                  {% elif cp.status == "Active" %}
+                  <a style="text-decoration: none;" href= "{% url 'disablecoupon' cp.id %}">
+                    <i style="color:red"onclick="return confirm('Are you want to disable '+' {{cp.coupon_code}} ?')">
+                    <button type="button" class="btn btn-link btn-sm btn-rounded btn-delete">
+                        Disable
+                    </button></i>
+                  </a>
+                  {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock dynamic %}
+
+{% block extrascript %}
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('#coupontable').DataTable({
+          scrollY: 400,
+          scrollX: true,
+          order: [[2, 'asc']],
+          columnDefs: [ {
+            "targets": 2,
+            render: function(data, type, row, meta) {
+                if (type === 'sort') {
+                  switch (data) {
+                    case 'Active':0
+                      return 0;
+                    case 'Upcoming':
+                      return 1;
+                    case 'Expired':
+                      return 2;
+                  }
+                }
+                
+                return data;
+              }
+          } ],
+        });
+      });
+</script>
+{% endblock extrascript %}

@@ -1,0 +1,72 @@
+main{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+}
+
+.carousel-inner img{
+    border-radius: 10px;
+}
+
+
+
+
+
+/* --------------------------------------CARD--------------------------------- */
+.cardsection{
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3%;
+}
+.card-overflow{
+    overflow: scroll;
+}
+
+
+
+.card{
+    min-width: 350px !important;
+    margin: .5rem;
+    border: none;
+    background-color: #121212 !important;
+}
+
+.card-body{
+    padding: 0 1rem 1rem 0;
+    background-color: #121212 !important;
+}
+.card-title{
+    margin-top: 1rem;
+    margin-bottom: 0rem !important;
+    color: rgba(245, 245, 245, 0.6);
+    font-size: .55rem;
+    letter-spacing: 1px;
+    font-weight: 900;
+}
+
+.card-text{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: rgb(245, 245, 245);
+    
+    
+}
+.disc-price{
+    margin-top:.6rem;
+    font-weight: 600;
+    font-family: sans-serif;
+}
+
+
+
+.card-badge{
+    /* margin-left: 1rem; */
+    float: right;
+    background-color: rgb(0, 116, 228) !important;
+}
+
+.card-img, .card-img-top{
+    border-radius: 3%;
+}

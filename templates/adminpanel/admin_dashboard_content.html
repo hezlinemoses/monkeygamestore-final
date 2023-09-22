@@ -1,0 +1,340 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block extracss %}<link rel="stylesheet" href="{% static 'styles/admin_dashboard.css' %}">{% endblock extracss %}
+{% block dynamic_css %}<link rel="stylesheet" href="{% static 'styles/admin-dashboard.css' %}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock dynamic_css %}
+
+{% block navbar %}
+{% include 'includes/adminpanel/admin_navbar.html' %}
+{% endblock navbar %} 
+
+
+{% block content %} 
+<div class="main">
+<div class="container-fluid outer-side-container">
+  <div class="row flex-nowrap main-container ">
+      <div class="col-auto col-md-9 col-lg-9 px-sm-9 px-0 bg-dark left-main-nav ms-2">
+          <div class="d-flex flex-column align-items-sm-start pt-2 text-white min-vh-100">
+              
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-sm-start w-100" id="menu">
+                 
+                  <li>
+                      <a href={% url 'admin_dashboard' %}  class="nav-link px-0 align-middle ">
+                          <i class="fs-4 bi-speedometer2"></i> <span class="ms-1  d-sm-inline">Dashboard</span> </a>
+                      
+                  </li>
+                  <li>
+                      <a href={% url 'customer_list' %} class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-table"></i> <span class="ms-1 d-sm-inline">Users</span></a>
+                  </li>
+                  <li>
+                      <a href="{% url 'admin_gamelist' %}"  class="nav-link px-0 align-middle ">
+                          <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-sm-inline">Games</span></a>
+                      
+                  </li>
+                  <li>
+                      <a href={% url 'admin_categorylist' %}  class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Categories</span> </a>
+                          
+                  </li>
+
+                  <li>
+                    <a href={% url 'admin_orderlist' %}  class="nav-link px-0 align-middle">
+                        <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Orders</span> </a>
+                        
+                </li>
+                <li>
+                  <a href={% url 'offerlist' %}  class="nav-link px-0 align-middle">
+                      <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Offers</span> 
+                  </a> 
+                </li>
+                <li>
+                  <a href={% url 'admin_couponlist' %}  class="nav-link px-0 align-middle">
+                      <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Coupons</span> 
+                  </a> 
+                </li>
+                <li>
+                  <a href={% url 'salesreport' %}  class="nav-link px-0 align-middle">
+                      <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Sales Report</span> 
+                  </a> 
+                </li>
+                  {% comment %} <li>
+                      <a href="#" class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-people"></i> <span class="ms-1 d-sm-inline">add more</span> </a>
+                  </li> {% endcomment %}
+              </ul>
+              
+          </div>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="dynamic"> 
+    {% block dynamic %}
+    {% comment %} <form action="">
+        {% csrf_token %}
+        {{form}}
+    </form> {% endcomment %}
+    <div class="row" style='width:99%;padding-left:1%;'>
+      <div class="col-md-3 col-12 card1 d-flex flex-column justify-content-center align-items-center me-3"><span class='fw-bold'>Completed Orders</span><span>{{completed_orders}}</span></div>
+      <div class="col-md-3 col-12 card2 d-flex flex-column justify-content-center align-items-center me-3"><span class='fw-bold'>Total Revenue</span><span>₹{{total_revenue}}</span></div>
+    </div>
+  
+    <select id="div-toggle" onchange="helloworld();helloworld2();">
+      <option value="lastweek">Last Week</option>
+      <option value="lastmonth">Last Month</option>
+    </select>
+    {% comment %} <div class="row">
+      <div class='col-md-1'>
+        {{form.start_date|as_crispy_field}}
+      </div>
+      <div class='col-md-1'>
+        {{form.end_date|as_crispy_field}}
+      </div>
+    </div> {% endcomment %}
+    
+    <div class='row mb-5' style="width: 99%;">
+      <div class='col-lg-6 col-12 d-flex flex-column'><div id="orderheading">Last Week's Orders:</div><canvas id="orderchart" ></canvas></div>
+      <div class='col-lg-6 col-12 d-flex flex-column'><div id="revenueheading">Last Week's Revenue:</div><canvas id="revenuechart" ></canvas></div>
+    </div>
+    <div class="row" style='width:99%;padding-left:1%;'>
+
+      <div class="col-md-3 col-12 card1 d-flex flex-column justify-content-center align-items-center me-3">
+        <span class='fw-bold'>Most Sold Game</span>
+        <span>{{top_game}}</span>
+        <span>Product Keys sold: {{top_game.salecount}}</span>
+        <span>Revenue Generated: ₹{{tp_gm_rev}}</span>
+      </div>
+
+      <div class="col-md-3 col-12 card2 d-flex flex-column justify-content-center align-items-center me-3">
+        <span class='fw-bold'>Most Used Coupon</span>
+        <span>{{top_coupon.coupon_code}}</span>
+        <span>Discount Given: ₹{{tp_cp_disc}}</span>
+      </div>
+
+      <div class="col-md-3 col-12 card1 d-flex flex-column justify-content-center align-items-center me-3">
+        <span class='fw-bold'>Most Revenue Generated Game</span>
+        <span>👑{{highest_game_rev_obj.title}}👑</span>
+        <span>Product Keys sold: {{highest_game_rev_obj.salecount}}</span>
+        <span>Revenue Generated: ₹{{highest_game_rev}}</span>
+      </div>
+      
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+  {% comment %} $("#id_start_date").flatpickr({
+    dateFormat: "Y-m-d",
+    }
+  );
+  $("#id_end_date").flatpickr({
+    dateFormat: "Y-m-d",
+    }
+  ); {% endcomment %}
+  window.onload = helloworld();helloworld2();
+  function helloworld() {
+    let chartStatus = Chart.getChart("orderchart"); // <canvas> id
+      if (chartStatus != undefined) {
+        chartStatus.destroy();
+      }
+    var $populationChart = $("#orderchart");
+    var value = $('#div-toggle').val();
+    if(value == "lastweek"){
+      $("#orderheading").html("Last Week's Orders:");
+      var current_url = "/admin_panel/weeklyorders/";
+    }
+    else if(value == "lastmonth"){
+      $("#orderheading").html("Last Month's Orders:");
+      var current_url = "/admin_panel/monthlyorders/";
+    }
+    $.ajax({
+      url: current_url,
+      success: function (data) {
+        if(current_url == "/admin_panel/weeklyorders/"){
+          $("#orderheading").html(`Last Week's Orders: <b>${data.sum}</b>`);
+        }
+        else{
+          $("#orderheading").html(`Last Month's Orders: <b>${data.sum}</b>`);
+        }
+        var ctx = $populationChart[0].getContext("2d");
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: data.chartlabel,
+              data: data.data,
+              cubicInterpolationMode: 'monotone',
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+                
+                ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+              
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  }
+
+  function helloworld2() {
+    let chartStatus = Chart.getChart("revenuechart"); // <canvas> id
+      if (chartStatus != undefined) {
+        chartStatus.destroy();
+      }
+    var $revenueChart = $("#revenuechart");
+    var value = $('#div-toggle').val();
+    if(value == "lastweek"){
+      $("#revenueheading").html("Last Week's Revenue:");
+      var current_url = "/admin_panel/weeklyrevenue/";
+    }
+    else if(value == "lastmonth"){
+      $("#revenueheading").html("Last Month's Revenue:");
+      var current_url = "/admin_panel/monthlyrevenue/";
+    }
+    $.ajax({
+      url: current_url,
+      success: function (data) {
+        if(current_url == "/admin_panel/weeklyrevenue/"){
+          $("#revenueheading").html(`Last Week's Revenue: <b>₹${data.sum}</b>`);
+        }
+        else{
+          $("#revenueheading").html(`Last Month's Revenue: <b>₹${data.sum}</b>`);
+        }
+        
+        var ctx = $revenueChart[0].getContext("2d");
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: data.chartlabel,
+              data: data.data,
+              cubicInterpolationMode: 'monotone',
+              backgroundColor: [
+              'rgba(255, 99, 132, 0.2)',
+              'rgba(54, 162, 235, 0.2)',
+              'rgba(255, 206, 86, 0.2)',
+              'rgba(75, 192, 192, 0.2)',
+              'rgba(153, 102, 255, 0.2)',
+              'rgba(255, 159, 64, 0.2)'
+                
+                ],
+              borderColor: [
+              'rgba(255, 206, 86, 1)',
+                
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 99, 132, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+              
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  }
+  
+    </script>
+</script>
+{% comment %} <script>
+  $(function () {
+    alert('sfsfsfsf');
+    var $monthlyorders = $("#monthlyOrders");
+    $.ajax({
+      url: "/admin_panel/weeklyorders/",
+      success: function (data) {
+
+        var ctx = $monthlyorders[0].getContext("2d");
+
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.labels,
+            datasets: [{
+              label: data.chartlabel,
+              data: data.data,
+              cubicInterpolationMode: 'monotone',
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+                'rgba(54, 162, 235, 0.2)',
+                'rgba(255, 206, 86, 0.2)',
+                'rgba(75, 192, 192, 0.2)',
+                'rgba(153, 102, 255, 0.2)',
+                'rgba(255, 159, 64, 0.2)'
+                ],
+              borderColor: [
+                'rgba(255, 99, 132, 1)',
+                'rgba(54, 162, 235, 1)',
+                'rgba(255, 206, 86, 1)',
+                'rgba(75, 192, 192, 1)',
+                'rgba(153, 102, 255, 1)',
+                'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1,
+              
+            }]          
+          },
+          options: {
+            responsive: true,
+            legend: {
+              position: 'top',
+            },
+            
+          }
+        });
+
+      }
+    });
+
+  }); {% endcomment %}
+
+</script>
+    
+    {% endblock dynamic %}
+</div>
+
+</div>
+
+{% endblock content %}
+

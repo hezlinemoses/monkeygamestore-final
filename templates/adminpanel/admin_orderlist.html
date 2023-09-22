@@ -1,0 +1,37 @@
+{% extends 'adminpanel/admin_dashboard.html' %}
+{% load static %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/admin_orderlist.css' %}"> {% endblock dynamic_css %}
+{% block dynamic %}
+
+<div class='orders-contain'>
+    <table id="ordertable" class="display nowrap bg-dark" style="width:100%">
+        <thead>
+            <tr>
+                <th>Order Id</th>
+                <th>User</th>
+                <th>Year</th>
+                <th>Month</th>
+                <th>No.of Items</th>
+                <th>Status</th>
+                <th>Total amount</th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td><a href="{% url 'admin_orderdetail' order.id %}">{{order.id}}</a></td>
+                <td>{{order.user.username}}</td>
+                <td>{{order.created_at|date:"Y"}}</td>
+                <td>{{order.created_at|date:"M"}}</td>
+                <td>{{order.itemcount}}</td>
+                <td>{{order.status}}</td>
+                <td>{{order.total}}</td>
+                
+            </tr>
+            {% endfor %}
+            <tbody>
+    </table>
+</div>
+
+{% endblock dynamic %}

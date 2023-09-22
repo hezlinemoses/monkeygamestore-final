@@ -1,0 +1,113 @@
+
+
+
+
+{% extends 'base.html' %}
+{%load crispy_forms_tags %} 
+{% load static %}
+{% block extracss %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock extracss %}
+{% block style %}
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+{% endblock style %}
+
+{% block content %}
+{% comment %} <form action="" method="post">
+    {% csrf_token %}
+   
+     {% if messages %}
+    {% for message in messages %}
+        <h3 class="loginerror">{{ message }}</h3>
+    {% endfor %}
+    {% endif %} 
+    
+
+        <!-- Email input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example1"><h3>Username</h3></label>
+          <input type="text" name="email" id="form2Example1" class="form-control" />
+        </div>
+      
+        <!-- Password input -->
+        <div class="form-outline mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+            <label class="form-label" for="form2Example2"><h3>Password</h3></label>
+          <input type="password" name="password" id="form2Example2" class="form-control" />
+        </div>
+      
+       
+      
+        <!-- Submit button -->
+        <input type="submit" class="btn btn-success btn-block mb-4" value="Login">
+        
+</form> {% endcomment %}
+
+
+
+<div class="text-center container-main my-5">
+    
+  <main class="form-signin">
+    <form action="" method="post">
+      {% csrf_token %}
+      
+      <div class="message">
+        {% if messages %}
+        {% for message in messages %}
+           <h3 class="message">{{ message }}</h3>
+        {% endfor %}
+        {% endif %} 
+     </div>
+
+     {% comment %} {% for field in form %}
+     <div class="form-floating">
+      {{field}}
+      {% for error in field.errors %}
+        {{ error }}
+      {% endfor %}
+      {% for help_text in field.help_text %}
+        {{ help_text }}
+      {% endfor %}
+    </div>
+     {% endfor %} {% endcomment %}
+  
+
+   
+     
+     
+      <img class="mb-4 brand-img" src={% static 'images/brand/brand-img.png' %} alt="" width="72" height="72">
+      <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
+      
+  
+    
+        {{form|crispy}}
+
+        {% comment %} {{form.as_p}} {% endcomment %}
+        
+        <button class="w-30 btn btn-lg btn-primary mb-3 signbtn" type="submit">Sign Up</button>
+    </form>
+  </main>
+  
+  
+      
+</div>
+
+
+{% endblock content %}
+
+
+
+
+
+

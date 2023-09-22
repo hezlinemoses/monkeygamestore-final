@@ -1,0 +1,69 @@
+
+
+
+
+{% extends 'adminpanel/admin_dashboard.html' %}
+{%load crispy_forms_tags %} 
+{% load static %}
+{% block dynamic_css %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock dynamic_css %}
+{% block style %}
+<style>
+  .bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+  }
+
+  @media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+  }
+</style>
+{% endblock style %}
+
+{% block dynamic %}
+
+
+
+<main class="container-fluid d-flex justify-content-between" style="width:100%;">
+  <div class="col-12 col-sm-7 col-md-6 col-lg-4">
+    <form action="" method="post">
+      {% csrf_token %}
+      
+      <h1 class="h3 mb-3 fw-normal">Update "{{category_edit}}"</h1>
+        {{form|crispy}}
+        <button class="w-30 btn btn-lg btn-primary mb-3 signbtn" type="submit">Update</button>
+    </form>
+  </div>  
+  <div class='sub-category ms-5' style="box-shadow: 0px 0px 10px white;border-radius:10px;width:30%;margin-right:30%;padding:1%;">
+    <h2>Sub-Categories</h2>
+    <a href="/admin_panel/categories/{{category_edit.get_absolute_url}}/addsubcategory/">
+      <button type="button" class="btn btn-link btn-sm btn-rounded btn-unblock">
+          Add Sub-category
+      </button>
+      </a> 
+  {% for sub_category in category_edit.sub_categories.all %}
+                
+                  <ul>
+                    <li>
+                      <a style='text-decoration:none;' href="{% url 'admin_editcategory' sub_category.slug %} ">{{ sub_category.name}}</a>
+                    </li>
+                  </ul>
+                  
+                  <br>
+                {% endfor %}
+              </div>
+
+                
+                
+              </main>
+{% endblock dynamic %}
+
+
+
+
+
+

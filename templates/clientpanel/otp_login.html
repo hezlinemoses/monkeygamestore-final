@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %}<link rel="stylesheet" type="text/css" href="{% static "/styles/clientpanel/login.css" %}"> {% endblock extracss %}
+{% block content %}
+
+
+
+    <div class="text-center container-main my-5">
+    
+        <main class="form-signin">
+          <form action="" method="post">
+            {% csrf_token %}
+         <div class="message">
+           {% if messages %}
+           {% for message in messages %}
+              <h3 class="message">{{ message }}</h3>
+           {% endfor %}
+           {% endif %} 
+        </div>
+           
+            <img class="mb-4 brand-img" src={% static 'images/base/brand-img.png' %} alt="" width="72" height="72">
+            <h1 class="h3 mb-3 fw-normal">OTP Login</h1>
+            
+            <div class="form-floating mb-3">
+              <input type="phone" name="phone" class="form-control" id="floatingInput" placeholder="name@example.com">
+              <label for="floatingInput">Phone Number</label>
+            </div>
+            {% comment %} <div class="form-floating">
+              <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+              <label for="floatingPassword">Password</label>
+            </div> {% endcomment %}
+        
+            <!-- <div class="checkbox mb-3">
+              <label>
+                <input type="checkbox" value="remember-me"> Remember me
+              </label>
+            </div> -->
+            <button class="w-100 btn btn-lg btn-primary mb-3 signbtn" type="submit">Send OTP</button>
+            <br>
+            {% comment %} <a class="otplink " href={% url 'otplogin' %}><div class="w-20 btn btn-lg otplogin btn-success" >OTP Login</button></a> {% endcomment %}
+            
+          </form>
+        </main>
+        
+        
+            
+      </div>
+
+    {% endblock content %}

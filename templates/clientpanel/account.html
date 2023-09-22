@@ -1,0 +1,204 @@
+{% extends 'clientpanel/account_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block dynamic_css %} <link rel="stylesheet" href="{% static 'styles/clientpanel/account.css' %}"> {% endblock dynamic_css %}
+
+
+{% block dynamic %}
+
+<h2 class='fw-bold mb-4'>Basic Details</h2>
+<div class="row">
+    <div class=" row col-12 col-lg-5 mb-3" > 
+        <div class="form-floating col-10">
+            <input type="text" name="username" value="{{request.user.username}}" class="form-control letter-space username-val" id="floatingInput"  disabled="" style='font-size:1rem;cursor: not-allowed;'>
+            <label style="padding-left: 2rem;" for="floatingInput">Username</label>
+        </div>
+        <div class='username-edit col-2 mt-2'>
+            <i style='font-size:2rem;' class="fas fa-edit text-success" data-bs-toggle="modal" data-bs-target="#staticBackdropUsername"></i>
+        </div>
+    </div>
+    <div class="row col-lg-5 col-12"> 
+        <div class="form-floating col-10">
+            <input type="text" name="email" value="{{request.user.email}}" class="form-control letter-space email-val" id="floatingInput"  disabled="" style='font-size:1rem;cursor: not-allowed;'>
+            <label style="padding-left: 2rem;" for="floatingInput">Email</label>
+        </div>
+        <div class='edit col-2' >
+            <i style='font-size:2rem;' class="fas fa-edit text-success" data-bs-toggle="modal" data-bs-target="#staticBackdropEmail"></i>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class=" row col-12 col-lg-5" > 
+        <div class="form-floating col-10">
+            <input type="text" name="phone" value="{{request.user.phone}}" class="form-control letter-space phone-val" id="floatingInput"  disabled="" style='font-size:1rem;cursor: not-allowed;'>
+            <label style="padding-left: 2rem;" for="floatingInput">Phone</label>
+        </div>
+        <div class='username-edit col-2 mt-2'>
+            <i style='font-size:2rem;' class="fas fa-edit text-success" data-bs-toggle="modal" data-bs-target="#staticBackdropPhone"></i>
+        </div>
+    </div>
+</div>
+<h3 class='fw-bold'>Account Overview</h3>
+<div class="card bg-dark" style="width: 18rem;">
+  {% comment %} <div class="card-header">
+    Featured
+  </div> {% endcomment %}
+  <ul class="list-group list-group-flush bg-dark">
+    <li class="list-group-item  d-flex justify-content-between"><span>Wallet:</span><span>₹{{request.user.wallet}}</span></li>
+    <li class="list-group-item d-flex justify-content-between"><span>Completed Orders:</span><span>{{user_orders}}</span></li>
+    <li class="list-group-item d-flex justify-content-between"><span>Refunded Orders:</span><span>{{user_orders_refunded}}</span></li>
+  </ul>
+</div>
+
+
+
+    <!-- Modal for username change-->
+    <div class="modal fade" class='close-modal' id="staticBackdropUsername" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+          <div class="modal-content bg-dark">
+            <div class="modal-header bg-dark">
+              <h5 class="modal-title bg-dark" id="staticBackdropLabel">Edit Username</h5>
+              <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close" onclick="updateall();"></button>
+            </div>
+            <div class="modal-body">
+             <form class='form-ajax' method='post'>
+                {% csrf_token %}
+                {{nameform|crispy}}
+                <button type="submit" class="btn btn-outline-success">Submit</button>
+             </form>
+            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="updateall();">Close</button>
+              {% comment %} <button type="submit" class="btn btn-primary">Submit</button> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal for username change-->
+    <div class="modal fade" class='close-modal' id="staticBackdropEmail" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog bg-dark">
+          <div class="modal-content bg-dark">
+            <div class="modal-header bg-dark">
+              <h5 class="modal-title bg-dark" id="staticBackdropLabel">Edit Email</h5>
+              <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close" onclick="updateall();"></button>
+            </div>
+            <div class="modal-body">
+             <form class='form-ajax' method='post'>
+                {% csrf_token %}
+                {{emailform|crispy}}
+                <button type="submit" class="btn btn-outline-success">Submit</button>
+             </form>
+            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="updateall();">Close</button>
+              {% comment %} <button type="submit" class="btn btn-primary">Submit</button> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+       <!-- Modal for username change-->
+    <div class="modal fade" class='close-modal' id="staticBackdropPhone" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog  bg-dark">
+          <div class="modal-content bg-dark">
+            <div class="modal-header bg-dark">
+              <h5 class="modal-title bg-dark" id="staticBackdropLabel">Edit Phone Number</h5>
+              <button type="button" class="btn-close btn-success" data-bs-dismiss="modal" aria-label="Close" onclick="updateall();"></button>
+            </div>
+            <div class="modal-body">
+             <form class='form-ajax' method='post'>
+                {% csrf_token %}
+                {{phoneform|crispy}}
+                <button type="submit" class="btn btn-outline-success">Submit</button>
+             </form>
+            
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="updateall();">Close</button>
+              {% comment %} <button type="submit" class="btn btn-primary">Submit</button> {% endcomment %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        $(document).ready(function () {
+            // catch the form's submit event
+            $('.form-ajax').submit(function () {
+                // create an AJAX call
+                $.ajax({
+                    data: $(this).serialize(), // get the form data
+                    type: $(this).attr('method'), // GET or POST
+                    url: "{% url 'account' %}",
+                    // on success
+                    success: function (response) {
+                      if (response.username_success){
+                        alert(response.username_success);
+                      }
+                      else if(response.username_error){
+                        alert(response.username_error);
+                      }
+                      else if(response.email_success){
+                        alert(response.email_success);
+                      }
+                      else if(response.email_error){
+                        alert(response.email_error);
+                      }
+                      else if(response.phone_success){
+                        alert(response.phone_success);
+                      }
+                      else if(response.phone_error){
+                        alert(response.phone_error);
+                      }
+                      else{
+                        alert('Error');
+                      }
+                        
+                        
+                        
+                        
+                    },
+                    // on error
+                    error: function (response) {
+                        // alert the error if any error occured
+                        alert(response.username_error);
+                        
+                        
+                    }
+                });
+                return false;
+            });
+        })
+    </script>
+
+    <script>
+      function updateall (id){
+        setTimeout(() => {
+            $.ajax({
+                // data: $(this).serialize(), // get the form data{
+                data:{greet:'Hello from client'},
+                url: "{% url 'account' %}",
+                // on success
+                success: function (response) {
+                        
+                        $('input[name=username]').val(`${response.username}`);
+                        $('input[name=email]').val(`${response.email}`);
+                        $('input[name=phone]').val(`${response.phone}`);
+                },
+                // on error
+                error: function (response) {
+                    // alert the error if any error occured
+                    
+                    console.log(response.responseJSON.errors)
+                }
+            });
+        }, 100);
+      }
+    </script>
+{% endblock dynamic %}

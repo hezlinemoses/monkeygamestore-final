@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %} <link href="{% static 'styles/clientpanel/gamedetail.css' %}" rel="stylesheet"> {% endblock extracss %}
+
+
+
+{% block content %}
+<main style='width:100%;' class='d-flex justify-content-center'>
+    <section class='d-flex'>
+        <div class='left-side d-flex flex-column'>
+            <h2 class='game-heading ms-2 mb-4'>{{game.title}}</h2>
+
+
+            <div
+            style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
+            class="swiper mySwiper2"
+          >
+            <div class="swiper-wrapper">
+              {% for image in slideimages %}
+              <div class="swiper-slide">
+                <img src="/media/{{image.slideimage}}" />
+              </div>
+
+              {% endfor %}
+         
+             
+            </div>
+           
+          </div>
+          <div thumbsSlider="" class="swiper mySwiper">
+            <div class="swiper-wrapper">
+              {% for image in slideimages %}
+              <div class="swiper-slide">
+                <img src="/media/{{image.slideimage}}" />
+              </div>
+              {% endfor %}
+             
+           
+            </div>
+          </div>
+          <br>
+          <hr>
+          {% for desc in descriptions %}
+          {% if desc.heading %}
+          <h5 class='fw-bold mb-3'>{{desc.heading}}</h5>
+          {% endif %}
+          {% if desc.description %}
+          <div class='mb-5'>{{desc.description}}</div>
+          {% endif %}
+          {% endfor %}
+
+
+
+            
+           
+        </div>
+           
+
+
+        
+        <div class="right-side">
+            <div class="card" style="width: 100%;margin-top:30%;">
+                
+                <div class="card-body d-flex flex-column align-items-center">
+                    {% comment %} <button data-game="30" data-action="add" class="btn btn-outline-secondary add-btn my-2 update-cart">Add to Cart</button> {% endcomment %}
+                    <h3 class="bold">₹{{game.base_price}}</h3>
+                   <button data-game={{game.id}} data-action="add" class="btn btn-outline-secondary add-btn my-2 update-cart item-remove col-12" id="game-{{game.id}}" onclick="removeItem('game-{{game.id}}')">Add to Cart</button>
+                </div>
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item bold">Released on : {{game.uploaded_on.date}}</li>
+                  <li class="list-group-item">Developed by :</li>
+                  <li class="list-group-item">Published by :</li>
+                </ul>
+                {% comment %} <div class="card-body">
+                  <a href="#" class="card-link">Card link</a>
+                  <a href="#" class="card-link">Another link</a>
+                </div> {% endcomment %}
+            </div>
+        </div>
+    </section>
+
+</main>
+{% endblock content %}
+
+{% block extrascript %}    
+<script>
+    var swiper = new Swiper(".mySwiper", {
+      loop: true,
+      spaceBetween: 10,
+      slidesPerView: 3,
+      freeMode: true,
+      watchSlidesProgress: true,
+    });
+    var swiper2 = new Swiper(".mySwiper2", {
+      loop: true,
+      spaceBetween: 10,
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      thumbs: {
+        swiper: swiper,
+      },
+      autoplay: {
+        delay: 3000,
+        disableOnInteraction: false,
+      },
+    });
+  </script>
+{% endblock extrascript %}

@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block extracss %}<link rel="stylesheet" href="{% static 'styles/admin_dashboard.css' %}">{% endblock extracss %}
+{% block dynamic_css %}{% endblock dynamic_css %}
+
+
+{% block navbar %}
+{% include 'includes/adminpanel/admin_navbar.html' %}
+{% endblock navbar %} 
+
+
+{% block content %} 
+<div class="main">
+<div class="container-fluid outer-side-container">
+  <div class="row flex-nowrap main-container ">
+      <div class="col-auto col-md-11 col-lg-11 px-sm-11 px-0 bg-dark left-main-nav ms-2">
+          <div class="d-flex flex-column align-items-sm-start pt-2 text-white min-vh-100">
+              
+              <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-sm-start w-100" id="menu">
+                 
+                  <li>
+                      <a href={% url 'admin_dashboard' %}  class="nav-link px-0 align-middle ">
+                          <i class="fs-4 bi-speedometer2"></i> <span class="ms-1  d-sm-inline">Dashboard</span> </a>
+                      
+                  </li>
+                  <li>
+                      <a href={% url 'customer_list' %} class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-table"></i> <span class="ms-1 d-sm-inline">Users</span></a>
+                  </li>
+                  <li>
+                      <a href="{% url 'admin_gamelist' %}"  class="nav-link px-0 align-middle ">
+                          <i class="fs-4 bi-bootstrap"></i> <span class="ms-1 d-sm-inline">Games</span></a>
+                      
+                  </li>
+                  <li>
+                      <a href={% url 'admin_categorylist' %}  class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Categories</span> </a>
+                          
+                  </li>
+
+                    <li>
+                        <a href={% url 'admin_orderlist' %}  class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Orders</span> 
+                        </a> 
+                    </li>
+                    <li>
+                        <a href={% url 'offerlist' %}  class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Offers</span> 
+                        </a> 
+                    </li>
+                    <li>
+                        <a href={% url 'admin_couponlist' %}  class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Coupons</span> 
+                        </a> 
+                      </li>
+                    <li>
+                        <a href={% url 'salesreport' %}  class="nav-link px-0 align-middle">
+                            <i class="fs-4 bi-grid"></i> <span class="ms-1 d-sm-inline">Sales Report</span> 
+                        </a> 
+                    </li>
+                  {% comment %} <li>
+                      <a href="#" class="nav-link px-0 align-middle">
+                          <i class="fs-4 bi-people"></i> <span class="ms-1 d-sm-inline">add more</span> </a>
+                  </li> {% endcomment %}
+              </ul>
+              
+          </div>
+      </div>
+    
+  </div>
+</div>
+
+  <div class="dynamic w-100"> {% block dynamic %}{% endblock dynamic %}</div>
+</div>
+
+{% endblock content %}

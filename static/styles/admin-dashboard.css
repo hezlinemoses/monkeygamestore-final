@@ -1,0 +1,15 @@
+.card1{
+    
+    background-color: rgba(61, 255, 51 ,0.097);
+    border: 1px solid rgba(61, 255, 51);
+    margin-bottom: 2rem;
+
+}
+
+.card2{
+    
+    background-color: rgba(255, 99, 132 ,0.097);
+    border: 1px solid rgb(255, 99, 132);
+    margin-bottom: 2rem;
+    
+}

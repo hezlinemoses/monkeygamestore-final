@@ -1,0 +1,45 @@
+.dark-light{
+    background-color: #212121 !important;
+}
+
+
+.list-group-item{
+    border-bottom: #212121;
+}
+
+.platform{
+    display: none;
+}
+
+@media (min-width:767px) {
+    
+    .flex-media{
+        display: flex !important;
+        
+    }
+    
+    .cart-summary{
+        width: 30%;
+        margin-top: 3rem;
+    }
+    .platform{
+        display: block;
+    }
+}
+
+@media (min-width:400px){
+    
+    .flex-media{
+        padding: 3rem;
+    }
+}
+
+
+.capital:first-letter {
+    text-transform: uppercase;
+}
+
+
+.update-cart:hover{
+    cursor: pointer;
+}

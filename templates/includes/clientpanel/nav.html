@@ -1,0 +1,70 @@
+
+<head>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'styles/includes/nav.css' %}">
+</head>
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand spacing d-none d-lg-block" href="{% url 'home' %}" style="margin-left: 5rem;"><span class="font-deco spacing">Monkey</span>Games</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'store' %}">Store</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Offers</a>
+              </li>
+              
+              
+              <li class="nav-item">
+                <form class="d-flex">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  </form>
+              </li>
+            </ul>
+            {% if user.is_authenticated %}
+            <!-- <div class="nav-item me-3">
+                <a class="nav-link" href="{% url 'cart' %}">Cart '{{request.user.cart.count}}'</a>
+              </div> -->
+              <div class="nav-item me-3">
+                <a class="nav-link" href="{% url 'cart' %}">
+                  
+                  <i class="fa" style="font-size:24px">&#xf07a;</i>
+                  <span id="cart-count" class='badge badge-warning' > {{request.user.cart.count}} </span>
+                </a>
+              </div>
+            <div class="nav-item dropdown " style="margin-right: 5rem;">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="text-decoration: none;color:white;">
+                {{user}}
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown" >
+                <li><a class="dropdown-item" href="{% url 'account' %}">Account</a></li>
+                {% if user.is_superuser %}
+                <li><a class="dropdown-item" href="{% url 'admin_dashboard' %}">Admin Panel</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+              </div>
+            {% else %}
+            <a class="nav-link" href="{% url 'cart' %}">
+                  
+              <i class="fa" style="font-size:24px">&#xf07a;</i>
+              <span id="cart-count" class='badge badge-warning' > {{cart.count}} </span>
+            </a>
+            <div class="nav-item d-flex " style="margin-right: 5rem;">
+              <a class="nav-link mx-2" href="{% url 'login' %}"><button type="button" class="btn btn-secondary">Login</button></a>
+              <a class="nav-link" href="{% url 'signup' %}"><button type="button" class="btn btn-secondary">Sign Up</button></a>
+            
+              </div>
+
+            {% endif %}
+            
+            
+          </div>
+        </div>
+      </nav>
+

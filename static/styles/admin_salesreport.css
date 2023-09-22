@@ -1,0 +1,41 @@
+.orders-contain{
+    border: solid #363A3C .01rem;
+    margin-right: 50px !important;
+}
+
+div.dataTables_wrapper {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #292c2f;
+    color: white !important;
+}
+
+label{
+    color: white;
+}
+
+label > input{
+    color: white;
+}
+select{
+    color: white;
+}
+option{
+    color: white;
+    background-color: black;
+}
+
+
+.dataTables_info{
+    color: white !important;
+}
+
+.previous,.next{
+    color: white !important;
+}
+
+tfoot input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
